@@ -1,10 +1,23 @@
 package com.doo.finalActv.beautymaker.view;
 
+import java.util.EnumMap;
+import javax.swing.JInternalFrame;
+
 
 public class MainWindow extends javax.swing.JFrame {
 
+  private enum AppView { 
+    LOGIN,
+    SIGNUP,
+    HOME
+  };
+  
+  private EnumMap<AppView, JInternalFrame> views;
+  private AppView currentView;
+
   public MainWindow() {
     initComponents();
+    this.startApplication();
   }
 
   /**
@@ -50,4 +63,55 @@ public class MainWindow extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JDesktopPane jDesktopPane1;
   // End of variables declaration//GEN-END:variables
+
+  private void startApplication() {
+    this.views = new EnumMap<>(AppView.class);
+
+    this.showLoginView();
+  }
+
+  private void showLoginView() {
+    this.currentView = AppView.LOGIN;
+    this.updateView();
+  }
+
+  private void updateView() {
+    if(this.views == null || this.currentView == null) {
+      System.err.println("Views or current view is not initialized.");
+      return;
+    }
+
+    for(JInternalFrame view : this.views.values()) {
+      view.setVisible(false);
+    }
+
+    JInternalFrame target = this.views.computeIfAbsent(
+        this.currentView,
+        this::createFrame
+    );
+    if(target == null) {
+      System.err.println("Failed to create view for: " + this.currentView);
+      return;
+    }
+
+    target.setVisible(true);
+    target.toFront();
+  }
+
+  private JInternalFrame createFrame(AppView view) {
+    switch (view) {
+      case LOGIN:
+        JInternalFrame loginView = new LoginView();
+        this.jDesktopPane1.add(loginView);
+        return loginView;
+      case SIGNUP:
+        //TODO
+        return null;
+      case HOME:
+        //TODO
+        return null;
+      default:
+        return null;
+    }
+  }
 }
