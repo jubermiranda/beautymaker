@@ -15,10 +15,13 @@ public class SessionManagerTest {
   
   @BeforeAll
   public static void setUpClass() {
+    this.createTestUser();
   }
   
   @AfterAll
   public static void tearDownClass() {
+    SessionManager.getInstance().logout();
+    this.deleteTestUser();
   }
   
   @BeforeEach
@@ -46,15 +49,30 @@ public class SessionManagerTest {
     assertNull(result, "getUser should return null if no user is logged in");
   }
 
+  /**
+   * Test of userIsLoggedIn method, of class SessionManager.
+   * This test checks when method should return false.
+   */
   @Test
-  public void testUserIsLoggedIn() {
-    System.out.println("userIsLoggedIn");
-    SessionManager instance = null;
-    boolean expResult = false;
-    boolean result = instance.userIsLoggedIn();
-    assertEquals(expResult, result);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+  public void testUserIsLoggedInFalseCase() {
+    boolean result = SessionManager.getInstance().userIsLoggedIn();
+    assertFalse(result, "userIsLoggedIn should return false when no user is logged in");
   }
-  
+
+  // ----------------
+
+  /**
+  *  Below tests needs that user is logged in
+  */
+
+  @Test
+  public void testGetUser() {
+    TestUtils.createTestUser();
+    TestUtils.loginTestUser();
+
+    User expectedUser = TestUtils.getTestUser();
+    User result = sessionManager.getUser();
+    assertNotNull(result, "getUser should return a User object if user is logged in");
+    assertEquals(expectedUser, result, "getUser should return the logged-in user");
+  }
 }
