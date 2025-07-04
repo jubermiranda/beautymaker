@@ -1,0 +1,97 @@
+package com.doo.finalActv.beautymaker.session;
+
+import com.doo.finalActv.beautymaker.exception.IllegalLoginRequest;
+import com.doo.finalActv.beautymaker.exception.IllegalLogoutRequest;
+import com.doo.finalActv.beautymaker.exception.IllegalSignupRequest;
+import com.doo.finalActv.beautymaker.model.User;
+import com.doo.finalActv.beautymaker.serivce.db.AuthService;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLogoutEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+
+public class SessionManager {
+  private static SessionManager instance;
+  private static EventManager eventManager;
+
+  private static User user;
+  
+  private SessionManager() {
+    eventManager = EventManager.getInstance();
+    this.initialize();
+  }
+  public static synchronized SessionManager getInstance() {
+    if(instance == null) {
+      instance = new SessionManager();
+    }
+    return instance;
+  }
+
+  public User getUser() {
+    return user;
+  }
+  
+  public boolean userIsLoggedIn() {
+    return user != null;
+  }
+
+  // ------
+
+  private void initialize() {
+    user = null;
+
+    this.initializeEvents();
+  }
+
+  private void initializeEvents() {
+    eventManager.subscribe(RequestLoginEvent.class, this::onLoginRequest);
+    eventManager.subscribe(RequestSignupEvent.class, this::onSignupRequest);
+    eventManager.subscribe(RequestLogoutEvent.class, this::onLogoutRequest);
+  }
+
+  private void onLoginRequest(RequestLoginEvent event) {
+    if(userIsLoggedIn()){
+      // TODO: trigger event reporting already logged in
+    }
+
+    try {
+      this.user = AuthService.login(event.username, event.password);
+      // TODO: trigger event reporting successful login
+    } catch (Exception e) {
+      // TODO: trigger event reporting failed login
+    }
+  }
+
+  private void onSignupRequest(RequestSignupEvent event) {
+    if(userIsLoggedIn()){
+      // TODO : trigger event reporting already logged in
+    }
+
+    try {
+      this.user = AuthService.signup(
+          event.username,
+          event.email,
+          event.confirmEmail,
+          event.password,
+          event.confirmPassword,
+          event.birthDate
+      );
+      // TODO: trigger event reporting successful signup
+
+    } catch (Exception e) {
+      event.onError.accept(e);
+    }
+  }
+
+  private void onLogoutRequest(RequestLogoutEvent event) {
+    if(!userIsLoggedIn()){
+      // TODO: trigger notification that user is not logged in
+    }
+
+    try {
+      this.user = null;
+    } catch (Exception e) {
+      // TODO: trigger notification reporting failed logout
+    }
+  }
+}

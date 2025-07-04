@@ -1,5 +1,8 @@
 package com.doo.finalActv.beautymaker.serivce.event.model;
 
+import java.time.LocalDate;
+import java.util.function.Consumer;
+
 public class RequestSignupEvent {
   public final String username;
   public final String email;
@@ -8,7 +11,15 @@ public class RequestSignupEvent {
   public final char[] confirmPassword;
   public final LocalDate birthDate;
 
-  public RequestSignupEvent(String username, String email, String confirmEmail, char[] password, char[] confirmPassword, LocalDate birthDate) {
+  public RequestSignupEvent(
+      String username,
+      String email,
+      String confirmEmail,
+      char[] password,
+      char[] confirmPassword,
+      LocalDate birthDate
+  ) {
+
     this.username = username;
     this.email = email;
     this.confirmEmail = confirmEmail;
