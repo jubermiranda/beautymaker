@@ -29,22 +29,16 @@ public class SessionManagerTest {
   public void tearDown() {
   }
 
-  /**
-   * Test of getInstance method, of class SessionManager.
-   */
   @Test
   public void testGetInstance() {
-    System.out.println("getInstance");
-    SessionManager expResult = null;
     SessionManager result = SessionManager.getInstance();
-    assertEquals(expResult, result);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+    assertNotNull(result);
+    assertTrue(result instanceof SessionManager);
+
+    SessionManager shouldBeSameInstance = SessionManager.getInstance();
+    assertSame(result, shouldBeSameInstance, "getInstance should return the same instance");
   }
 
-  /**
-   * Test of getUser method, of class SessionManager.
-   */
   @Test
   public void testGetUser() {
     System.out.println("getUser");
@@ -56,9 +50,6 @@ public class SessionManagerTest {
     fail("The test case is a prototype.");
   }
 
-  /**
-   * Test of userIsLoggedIn method, of class SessionManager.
-   */
   @Test
   public void testUserIsLoggedIn() {
     System.out.println("userIsLoggedIn");
