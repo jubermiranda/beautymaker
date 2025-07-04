@@ -1,11 +1,11 @@
 package com.doo.finalActv.beautymaker;
 
+import com.doo.finalActv.beautymaker.view.MainWindow;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+      MainWindow mainWindow = new MainWindow();
+      mainWindow.setVisible(true);
     }
 }
