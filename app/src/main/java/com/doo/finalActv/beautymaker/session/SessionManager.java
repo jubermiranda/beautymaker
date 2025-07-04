@@ -3,12 +3,16 @@ package com.doo.finalActv.beautymaker.session;
 import com.doo.finalActv.beautymaker.exception.IllegalLoginRequest;
 import com.doo.finalActv.beautymaker.exception.IllegalLogoutRequest;
 import com.doo.finalActv.beautymaker.exception.IllegalSignupRequest;
+import com.doo.finalActv.beautymaker.model.NotificationType;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.db.AuthService;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLogoutEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.SuccessfulLoginEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.UserLoggedOutEvent;
 
 public class SessionManager {
   private static SessionManager instance;
@@ -51,20 +55,34 @@ public class SessionManager {
 
   private void onLoginRequest(RequestLoginEvent event) {
     if(userIsLoggedIn()){
-      // TODO: trigger event reporting already logged in
+      eventManager.publish(new NotificationEvent(
+          NotificationType.WARNING,
+          "Cant login",
+          "User is already logged in."
+      ));
+      return;
     }
 
     try {
       this.user = AuthService.login(event.username, event.password);
-      // TODO: trigger event reporting successful login
+      eventManager.publish(new SuccessfulLoginEvent());
+
     } catch (Exception e) {
-      // TODO: trigger event reporting failed login
+      eventManager.publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Login failed",
+          e.getMessage()
+      ));
     }
   }
 
   private void onSignupRequest(RequestSignupEvent event) {
     if(userIsLoggedIn()){
-      // TODO : trigger event reporting already logged in
+      eventManager.publish(new NotificationEvent(
+          NotificationType.WARNING,
+          "Cant signup",
+          "User is already logged in."
+      ));
     }
 
     try {
@@ -76,22 +94,29 @@ public class SessionManager {
           event.confirmPassword,
           event.birthDate
       );
-      // TODO: trigger event reporting successful signup
+
+      eventManager.publish(new SuccessfulLoginEvent());
 
     } catch (Exception e) {
-      event.onError.accept(e);
+      eventManager.publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Signup failed",
+          e.getMessage()
+      ));
     }
   }
 
   private void onLogoutRequest(RequestLogoutEvent event) {
     if(!userIsLoggedIn()){
-      // TODO: trigger notification that user is not logged in
+      eventManager.publish(new NotificationEvent(
+          NotificationType.WARNING,
+          "Cant logout",
+          "User is not logged in."
+      ));
+      return;
     }
 
-    try {
-      this.user = null;
-    } catch (Exception e) {
-      // TODO: trigger notification reporting failed logout
-    }
+    this.user = null;
+    eventManager.publish(new UserLoggedOutEvent());
   }
 }
