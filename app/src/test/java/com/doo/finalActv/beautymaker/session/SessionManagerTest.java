@@ -23,6 +23,7 @@ public class SessionManagerTest {
   
   @BeforeEach
   public void setUp() {
+    SessionManager sessionManager = SessionManager.getInstance();
   }
   
   @AfterEach
@@ -40,14 +41,9 @@ public class SessionManagerTest {
   }
 
   @Test
-  public void testGetUser() {
-    System.out.println("getUser");
-    SessionManager instance = null;
-    User expResult = null;
-    User result = instance.getUser();
-    assertEquals(expResult, result);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+  public void testGetUserReturnsNullIfUserNotLogged() {
+    User result = SessionManager.getInstance().getUser();
+    assertNull(result, "getUser should return null if no user is logged in");
   }
 
   @Test
