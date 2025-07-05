@@ -13,6 +13,9 @@ import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.SuccessfulLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.UserLoggedOutEvent;
+import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
+import com.doo.finalActv.beautymaker.serivce.utils.Validator;
+import java.util.Arrays;
 
 public class SessionManager {
   private static SessionManager instance;
@@ -64,7 +67,7 @@ public class SessionManager {
     }
 
     try {
-      this.user = AuthService.login(event.username, event.password);
+      this.user = DatabaseManager.getUser(event.username, event.password);
       eventManager.publish(new SuccessfulLoginEvent());
 
     } catch (Exception e) {
@@ -86,12 +89,22 @@ public class SessionManager {
     }
 
     try {
-      this.user = AuthService.signup(
+      this.validateSignupRequest(event);
+
+    } catch (IllegalSignupRequest e) {
+      eventManager.publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Signup failed",
+          e.getMessage()
+      ));
+      return;
+    }
+
+    try {
+      this.user = DatabaseManager.register(
           event.username,
           event.email,
-          event.confirmEmail,
           event.password,
-          event.confirmPassword,
           event.birthDate
       );
 
@@ -118,5 +131,27 @@ public class SessionManager {
 
     this.user = null;
     eventManager.publish(new UserLoggedOutEvent());
+  }
+
+
+  private void validateSignupRequest(RequestSignupEvent event) throws IllegalSignupRequest {
+    if(!(event.email.equals(event.confirmEmail))) {
+      throw new IllegalSignupRequest("Emails do not match.");
+    }
+    if(!(Arrays.equals(event.password, event.confirmPassword))) {
+      throw new IllegalSignupRequest("Passwords do not match.");
+    }
+    if(!Validator.isValidUsername(event.username)) {
+      throw new IllegalSignupRequest("Username is not valid.");
+    }
+    if(!Validator.isValidEmail(event.email)) {
+      throw new IllegalSignupRequest("Email is not valid.");
+    }
+    if(!Validator.isValidPassword(event.password)) {
+      throw new IllegalSignupRequest(
+          "Password needs to be at least 8 characters long, "
+          +"contain at least one digit and one special character."
+      );
+    }
   }
 }

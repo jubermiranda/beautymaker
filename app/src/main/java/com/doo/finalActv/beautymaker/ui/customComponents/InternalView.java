@@ -1,4 +1,4 @@
-package com.doo.finalActv.beautymaker.view.customComponents;
+package com.doo.finalActv.beautymaker.ui.customComponents;
 
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;

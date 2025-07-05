@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Employee extends User {
 
-  public Employee(String name, String email, LocalDate birthDate) {
-    super(name, email, birthDate);
+  public Employee(int id, String name, String email, LocalDate birthDate) {
+    super(id, name, email, birthDate);
   }
 }

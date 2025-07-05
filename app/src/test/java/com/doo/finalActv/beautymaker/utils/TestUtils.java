@@ -1,28 +1,61 @@
 package com.doo.finalActv.beautymaker.utils;
 
-public class TestUtils {
-  public static void createUserTest(String username, String email)
-      throws IllegalArgumentException 
-  {
-    if(this.userAlreadyExists(username)) {
-      return;
-    }
+import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
+import com.doo.finalActv.beautymaker.model.Client;
+import com.doo.finalActv.beautymaker.model.User;
+import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLogoutEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+import com.doo.finalActv.beautymaker.session.SessionManager;
 
-    User user = this.createUser(username, email);
+import java.time.LocalDate;
+
+public class TestUtils {
+
+  private static final String testUserName = "testUser";
+  private static final String testUserEmail = "user_test@email.com";
+  private static final char[] testPassword = "testPassword123".toCharArray();
+  private static final LocalDate testBirthDate = LocalDate.of(1990, 1, 1);
+
+
+  public static void loginTestUser() {
     try {
-      AuthService.signup(
-          user.getName(),
-          user.getEmail(),
-          user.getEmail(),
-          "usertest123".toCharArray(),
-          "usertest123".toCharArray(),
-          LocalDate.of(1990, 1, 1)
-      );
-    } catch (Exception e) {
-      System.out.println("Error creating user: " + e.getMessage());
-      throw new RuntimeException("User creation failed", e);
+      DatabaseManager.getUser(testUserEmail, testPassword);
+      EventManager.getInstance().publish(new RequestLoginEvent(
+          testUserEmail,
+          testPassword
+      ));
+    } catch (Exception e){
+      if(e instanceof UserNotFoundException) {
+        EventManager.getInstance().publish(new RequestSignupEvent(
+            testUserName,
+            testUserEmail,
+            testUserEmail,
+            testPassword,
+            testPassword,
+            testBirthDate
+        ));
+      } else {
+        e.printStackTrace();
+      }
     }
-    return user;
   }
 
+  public static User getTestUser() {
+    User testUser = new Client(
+        1,
+        testUserName,
+        testUserEmail,
+        testBirthDate
+    );
+    return testUser;
+  }
+
+  public static void logoutTestUser() {
+    if(SessionManager.getInstance().userIsLoggedIn()) {
+      EventManager.getInstance().publish(new RequestLogoutEvent());
+    }
+  }
 }

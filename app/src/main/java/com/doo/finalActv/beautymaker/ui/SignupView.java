@@ -1,4 +1,4 @@
-package com.doo.finalActv.beautymaker.view;
+package com.doo.finalActv.beautymaker.ui;
 
 /**
  *
