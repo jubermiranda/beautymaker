@@ -1,6 +1,6 @@
 package com.doo.finalActv.beautymaker;
 
-import com.doo.finalActv.beautymaker.view.MainWindow;
+import com.doo.finalActv.beautymaker.ui.MainWindow;
 
 public class App {
 

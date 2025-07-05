@@ -1,4 +1,4 @@
-package com.doo.finalActv.beautymaker.view;
+package com.doo.finalActv.beautymaker.ui;
 
 import java.util.EnumMap;
 import javax.swing.JInternalFrame;
@@ -32,7 +32,6 @@ public class MainWindow extends javax.swing.JFrame {
     jDesktopPane1 = new javax.swing.JDesktopPane();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setPreferredSize(new java.awt.Dimension(800, 600));
 
     javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
     jDesktopPane1.setLayout(jDesktopPane1Layout);
