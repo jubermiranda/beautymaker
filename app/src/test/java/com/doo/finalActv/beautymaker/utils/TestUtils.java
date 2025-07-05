@@ -20,15 +20,20 @@ public class TestUtils {
   private static final LocalDate testBirthDate = LocalDate.of(1990, 1, 1);
 
 
+  // examples of how to trigger the login/signup events
   public static void loginTestUser() {
     try {
       DatabaseManager.getUser(testUserEmail, testPassword);
+
+      // exemple of how to trigger the login event (if user exists)
       EventManager.getInstance().publish(new RequestLoginEvent(
           testUserEmail,
           testPassword
       ));
     } catch (Exception e){
       if(e instanceof UserNotFoundException) {
+
+        // exemple of how to trigger the signup event (if user does not exist)
         EventManager.getInstance().publish(new RequestSignupEvent(
             testUserName,
             testUserEmail,
