@@ -28,7 +28,7 @@ public class NotificationPanel extends JPanel {
 
     JLabel titleLabel = new JLabel(title);
 
-    JLabel messageLabel = new JLabel("<html>" + message + "</html>");
+    JLabel messageLabel = new JLabel("<html>" + message.replace("\n", "<br>") + "</html>");
     
 
     JPanel content = new JPanel();
