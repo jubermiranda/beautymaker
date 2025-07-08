@@ -1,5 +1,6 @@
 package com.doo.finalActv.beautymaker.ui;
 
+import java.awt.Dimension;
 import java.util.EnumMap;
 import javax.swing.JInternalFrame;
 
@@ -109,33 +110,60 @@ public class MainWindow extends javax.swing.JFrame {
       view.setVisible(false);
     }
 
-    JInternalFrame target = this.views.computeIfAbsent(
-        this.currentView,
-        this::createFrame
-    );
+    JInternalFrame target = this.getCrrFrame();
     if(target == null) {
       System.err.println("Failed to create view for: " + this.currentView);
       return;
     }
 
     target.setVisible(true);
-    //target.toFront();
+    target.toFront();
+  }
+
+  private JInternalFrame getCrrFrame() {
+    JInternalFrame target = this.views.computeIfAbsent(
+        this.currentView,
+        this::createFrame
+    );
+    
+    return target;
   }
 
   private JInternalFrame createFrame(AppView view) {
+    JInternalFrame result;
     switch (view) {
       case LOGIN:
-        JInternalFrame loginView = new LoginView();
-        this.jDesktopPane1.add(loginView);
-        return loginView;
+        result = new LoginView();
+        break;
       case SIGNUP:
         //TODO
-        return null;
+        result = null;
+        break;
       case HOME:
         //TODO
-        return null;
+        result = null;
+        break;
       default:
-        return null;
+        result = null;
+        break;
     }
+
+    this.centralizeFrame(result);
+    jDesktopPane1.add(result);
+    return result;
+  }
+
+  private void centralizeFrame(JInternalFrame frame) {
+    if (frame == null) {
+      return;
+    }
+
+    Dimension deskSize = jDesktopPane1.getSize();
+    Dimension frameSize = frame.getSize();
+    int centerX = deskSize.width / 2;
+    int centerY = deskSize.height / 2;
+    int x = (Math.max(0, centerX - (frameSize.width / 2)));
+    int y = (Math.max(0, centerY - (frameSize.height / 2)));
+    frame.setLocation(x, y);
   }
 }
