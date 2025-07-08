@@ -6,7 +6,7 @@ import javax.swing.JInternalFrame;
 
 public class MainWindow extends javax.swing.JFrame {
 
-  private enum AppView { 
+  private enum AppView {
     LOGIN,
     SIGNUP,
     HOME
@@ -30,18 +30,43 @@ public class MainWindow extends javax.swing.JFrame {
   private void initComponents() {
 
     jDesktopPane1 = new javax.swing.JDesktopPane();
+    notificationPanel = new javax.swing.JPanel();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    setPreferredSize(new java.awt.Dimension(1920, 1080));
+
+    notificationPanel.setEnabled(false);
+    notificationPanel.setFocusable(false);
+    notificationPanel.setOpaque(false);
+
+    javax.swing.GroupLayout notificationPanelLayout = new javax.swing.GroupLayout(notificationPanel);
+    notificationPanel.setLayout(notificationPanelLayout);
+    notificationPanelLayout.setHorizontalGroup(
+      notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 300, Short.MAX_VALUE)
+    );
+    notificationPanelLayout.setVerticalGroup(
+      notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 1068, Short.MAX_VALUE)
+    );
+
+    jDesktopPane1.setLayer(notificationPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
     javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
     jDesktopPane1.setLayout(jDesktopPane1Layout);
     jDesktopPane1Layout.setHorizontalGroup(
       jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 1080, Short.MAX_VALUE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+        .addContainerGap(1614, Short.MAX_VALUE)
+        .addComponent(notificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     jDesktopPane1Layout.setVerticalGroup(
       jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 720, Short.MAX_VALUE)
+      .addGroup(jDesktopPane1Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(notificationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addContainerGap())
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -61,11 +86,11 @@ public class MainWindow extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JDesktopPane jDesktopPane1;
+  private javax.swing.JPanel notificationPanel;
   // End of variables declaration//GEN-END:variables
 
   private void startApplication() {
     this.views = new EnumMap<>(AppView.class);
-
     this.showLoginView();
   }
 
@@ -94,7 +119,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     target.setVisible(true);
-    target.toFront();
+    //target.toFront();
   }
 
   private JInternalFrame createFrame(AppView view) {
