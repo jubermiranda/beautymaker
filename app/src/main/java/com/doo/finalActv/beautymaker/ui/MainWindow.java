@@ -1,9 +1,10 @@
 package com.doo.finalActv.beautymaker.ui;
 
+import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.ui.customComponents.NotificationPanel;
 import java.awt.Dimension;
 import java.util.EnumMap;
 import javax.swing.JInternalFrame;
-
 
 public class MainWindow extends javax.swing.JFrame {
 
@@ -12,7 +13,7 @@ public class MainWindow extends javax.swing.JFrame {
     SIGNUP,
     HOME
   };
-  
+
   private EnumMap<AppView, JInternalFrame> views;
   private AppView currentView;
 
@@ -34,7 +35,6 @@ public class MainWindow extends javax.swing.JFrame {
     notificationPanel = new javax.swing.JPanel();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setPreferredSize(new java.awt.Dimension(1920, 1080));
 
     notificationPanel.setEnabled(false);
     notificationPanel.setFocusable(false);
@@ -101,17 +101,17 @@ public class MainWindow extends javax.swing.JFrame {
   }
 
   private void updateView() {
-    if(this.views == null || this.currentView == null) {
+    if (this.views == null || this.currentView == null) {
       System.err.println("Views or current view is not initialized.");
       return;
     }
 
-    for(JInternalFrame view : this.views.values()) {
+    for (JInternalFrame view : this.views.values()) {
       view.setVisible(false);
     }
 
     JInternalFrame target = this.getCrrFrame();
-    if(target == null) {
+    if (target == null) {
       System.err.println("Failed to create view for: " + this.currentView);
       return;
     }
@@ -122,10 +122,10 @@ public class MainWindow extends javax.swing.JFrame {
 
   private JInternalFrame getCrrFrame() {
     JInternalFrame target = this.views.computeIfAbsent(
-        this.currentView,
-        this::createFrame
+            this.currentView,
+            this::createFrame
     );
-    
+
     return target;
   }
 
@@ -165,5 +165,17 @@ public class MainWindow extends javax.swing.JFrame {
     int x = (Math.max(0, centerX - (frameSize.width / 2)));
     int y = (Math.max(0, centerY - (frameSize.height / 2)));
     frame.setLocation(x, y);
+  }
+
+  private void showNotification(String title, String message, NotificationType type) {
+    NotificationPanel notif = new NotificationPanel(title, message, notificationPanel, type);
+
+    notificationPanel.add(notif);
+    notificationPanel.revalidate();
+
+    int yOffset = 10 + notificationPanel.getComponentCount() * 110;
+    notif.setBounds(10, yOffset, 303, 100);
+
+    notificationPanel.repaint();
   }
 }
