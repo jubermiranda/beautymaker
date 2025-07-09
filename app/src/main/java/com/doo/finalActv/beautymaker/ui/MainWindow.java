@@ -1,6 +1,8 @@
 package com.doo.finalActv.beautymaker.ui;
 
 import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.ui.customComponents.NotificationPanel;
 import java.awt.Dimension;
 import java.util.EnumMap;
@@ -20,6 +22,7 @@ public class MainWindow extends javax.swing.JFrame {
   public MainWindow() {
     initComponents();
     this.startApplication();
+    this.showLoginView();
   }
 
   /**
@@ -92,12 +95,24 @@ public class MainWindow extends javax.swing.JFrame {
 
   private void startApplication() {
     this.views = new EnumMap<>(AppView.class);
-    this.showLoginView();
+    this.setupServices();
   }
 
   private void showLoginView() {
     this.currentView = AppView.LOGIN;
     this.updateView();
+  }
+
+  private void showNotification(String title, String message, NotificationType type) {
+    NotificationPanel notif = new NotificationPanel(title, message, notificationPanel, type);
+
+    notificationPanel.add(notif);
+    notificationPanel.revalidate();
+
+    int yOffset = 10 + notificationPanel.getComponentCount() * 110;
+    notif.setBounds(10, yOffset, 303, 100);
+
+    notificationPanel.repaint();
   }
 
   private void updateView() {
@@ -167,15 +182,17 @@ public class MainWindow extends javax.swing.JFrame {
     frame.setLocation(x, y);
   }
 
-  private void showNotification(String title, String message, NotificationType type) {
-    NotificationPanel notif = new NotificationPanel(title, message, notificationPanel, type);
+  private void setupServices() {
+    this.setupNotificationService();
+  }
 
-    notificationPanel.add(notif);
-    notificationPanel.revalidate();
-
-    int yOffset = 10 + notificationPanel.getComponentCount() * 110;
-    notif.setBounds(10, yOffset, 303, 100);
-
-    notificationPanel.repaint();
+  private void setupNotificationService() {
+    EventManager.getInstance().subscribe(NotificationEvent.class, event -> {
+      this.showNotification(
+          event.title,
+          event.message,
+          event.type
+      );
+    });
   }
 }
