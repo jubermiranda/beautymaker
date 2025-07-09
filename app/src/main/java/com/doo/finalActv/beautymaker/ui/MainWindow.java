@@ -106,13 +106,12 @@ public class MainWindow extends javax.swing.JFrame {
   private void showNotification(String title, String message, NotificationType type) {
     NotificationPanel notif = new NotificationPanel(title, message, notificationPanel, type);
 
-    notificationPanel.add(notif);
-    notificationPanel.revalidate();
-
     int yOffset = 10 + notificationPanel.getComponentCount() * 110;
     notif.setBounds(10, yOffset, 303, 100);
-
     notificationPanel.repaint();
+
+    notificationPanel.add(notif);
+    notificationPanel.revalidate();
   }
 
   private void updateView() {
