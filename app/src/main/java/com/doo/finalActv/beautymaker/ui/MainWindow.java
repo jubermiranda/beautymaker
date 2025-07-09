@@ -162,8 +162,10 @@ public class MainWindow extends javax.swing.JFrame {
         break;
     }
 
-    this.centralizeFrame(result);
-    jDesktopPane1.add(result);
+    if (result != null) {
+        this.centralizeFrame(result);
+        jDesktopPane1.add(result);
+    }
     return result;
   }
 
