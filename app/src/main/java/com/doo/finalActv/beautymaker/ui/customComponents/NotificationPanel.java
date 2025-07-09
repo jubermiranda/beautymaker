@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.swing.Box;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +25,7 @@ public class NotificationPanel extends JPanel {
     setLayout(new BorderLayout());
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
     setMaximumSize(new Dimension(WIDTH, HEIGHT));
-    setOpaque(false);
+    //setOpaque(false);
 
     JLabel titleLabel = new JLabel(title);
 
@@ -34,7 +35,7 @@ public class NotificationPanel extends JPanel {
     JPanel content = new JPanel();
     content.setOpaque(false);
     content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-    //content.setBorder(ThemeManager.getTheme().getStdBorder());
+    content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
     content.add(titleLabel);
     content.add(Box.createVerticalStrut(6));
