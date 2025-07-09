@@ -1,23 +1,28 @@
 package com.doo.finalActv.beautymaker.ui;
 
+import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
+import com.doo.finalActv.beautymaker.ui.customComponents.NotificationPanel;
+import java.awt.Dimension;
 import java.util.EnumMap;
 import javax.swing.JInternalFrame;
 
-
 public class MainWindow extends javax.swing.JFrame {
 
-  private enum AppView { 
+  private enum AppView {
     LOGIN,
     SIGNUP,
     HOME
   };
-  
+
   private EnumMap<AppView, JInternalFrame> views;
   private AppView currentView;
 
   public MainWindow() {
     initComponents();
     this.startApplication();
+    this.showLoginView();
   }
 
   /**
@@ -30,18 +35,42 @@ public class MainWindow extends javax.swing.JFrame {
   private void initComponents() {
 
     jDesktopPane1 = new javax.swing.JDesktopPane();
+    notificationPanel = new javax.swing.JPanel();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+    notificationPanel.setEnabled(false);
+    notificationPanel.setFocusable(false);
+    notificationPanel.setOpaque(false);
+
+    javax.swing.GroupLayout notificationPanelLayout = new javax.swing.GroupLayout(notificationPanel);
+    notificationPanel.setLayout(notificationPanelLayout);
+    notificationPanelLayout.setHorizontalGroup(
+      notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 300, Short.MAX_VALUE)
+    );
+    notificationPanelLayout.setVerticalGroup(
+      notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 1068, Short.MAX_VALUE)
+    );
+
+    jDesktopPane1.setLayer(notificationPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
     javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
     jDesktopPane1.setLayout(jDesktopPane1Layout);
     jDesktopPane1Layout.setHorizontalGroup(
       jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 1080, Short.MAX_VALUE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+        .addContainerGap(1614, Short.MAX_VALUE)
+        .addComponent(notificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
     jDesktopPane1Layout.setVerticalGroup(
       jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 720, Short.MAX_VALUE)
+      .addGroup(jDesktopPane1Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(notificationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addContainerGap())
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -61,12 +90,12 @@ public class MainWindow extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JDesktopPane jDesktopPane1;
+  private javax.swing.JPanel notificationPanel;
   // End of variables declaration//GEN-END:variables
 
   private void startApplication() {
     this.views = new EnumMap<>(AppView.class);
-
-    this.showLoginView();
+    this.setupServices();
   }
 
   private void showLoginView() {
@@ -74,21 +103,29 @@ public class MainWindow extends javax.swing.JFrame {
     this.updateView();
   }
 
+  private void showNotification(String title, String message, NotificationType type) {
+    NotificationPanel notif = new NotificationPanel(title, message, notificationPanel, type);
+
+    int yOffset = 10 + notificationPanel.getComponentCount() * 110;
+    notif.setBounds(10, yOffset, 303, 100);
+    notificationPanel.repaint();
+
+    notificationPanel.add(notif);
+    notificationPanel.revalidate();
+  }
+
   private void updateView() {
-    if(this.views == null || this.currentView == null) {
+    if (this.views == null || this.currentView == null) {
       System.err.println("Views or current view is not initialized.");
       return;
     }
 
-    for(JInternalFrame view : this.views.values()) {
+    for (JInternalFrame view : this.views.values()) {
       view.setVisible(false);
     }
 
-    JInternalFrame target = this.views.computeIfAbsent(
-        this.currentView,
-        this::createFrame
-    );
-    if(target == null) {
+    JInternalFrame target = this.getCrrFrame();
+    if (target == null) {
       System.err.println("Failed to create view for: " + this.currentView);
       return;
     }
@@ -97,20 +134,66 @@ public class MainWindow extends javax.swing.JFrame {
     target.toFront();
   }
 
+  private JInternalFrame getCrrFrame() {
+    JInternalFrame target = this.views.computeIfAbsent(
+            this.currentView,
+            this::createFrame
+    );
+
+    return target;
+  }
+
   private JInternalFrame createFrame(AppView view) {
+    JInternalFrame result;
     switch (view) {
       case LOGIN:
-        JInternalFrame loginView = new LoginView();
-        this.jDesktopPane1.add(loginView);
-        return loginView;
+        result = new LoginView();
+        break;
       case SIGNUP:
         //TODO
-        return null;
+        result = null;
+        break;
       case HOME:
         //TODO
-        return null;
+        result = null;
+        break;
       default:
-        return null;
+        result = null;
+        break;
     }
+
+    if (result != null) {
+        this.centralizeFrame(result);
+        jDesktopPane1.add(result);
+    }
+    return result;
+  }
+
+  private void centralizeFrame(JInternalFrame frame) {
+    if (frame == null) {
+      return;
+    }
+
+    Dimension deskSize = jDesktopPane1.getSize();
+    Dimension frameSize = frame.getSize();
+    int centerX = deskSize.width / 2;
+    int centerY = deskSize.height / 2;
+    int x = (Math.max(0, centerX - (frameSize.width / 2)));
+    int y = (Math.max(0, centerY - (frameSize.height / 2)));
+    frame.setLocation(x, y);
+  }
+
+  private void setupServices() {
+    this.setupNotificationService();
+  }
+
+  private void setupNotificationService() {
+    EventManager.getInstance().subscribe(NotificationEvent.class, event -> {
+      this.showNotification(
+          event.title,
+          event.message,
+          event.type
+      );
+    });
   }
 }

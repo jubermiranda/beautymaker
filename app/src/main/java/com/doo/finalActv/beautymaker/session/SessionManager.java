@@ -86,6 +86,7 @@ public class SessionManager {
           "Cant signup",
           "User is already logged in."
       ));
+      return;
     }
 
     try {
