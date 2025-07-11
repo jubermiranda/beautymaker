@@ -22,7 +22,8 @@ public class MainWindow extends javax.swing.JFrame {
   public MainWindow() {
     initComponents();
     this.startApplication();
-    this.showLoginView();
+    //this.showLoginView();
+    this.showHomeView();
   }
 
   /**
@@ -103,6 +104,11 @@ public class MainWindow extends javax.swing.JFrame {
     this.updateView();
   }
 
+  private void showHomeView() {
+    this.currentView = AppView.HOME;
+    this.updateView();
+  }
+
   private void showNotification(String title, String message, NotificationType type) {
     NotificationPanel notif = new NotificationPanel(title, message, notificationPanel, type);
 
@@ -154,8 +160,7 @@ public class MainWindow extends javax.swing.JFrame {
         result = null;
         break;
       case HOME:
-        //TODO
-        result = null;
+        result = new BaseHomeView();
         break;
       default:
         result = null;
@@ -163,8 +168,10 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     if (result != null) {
+      if(!(result instanceof BaseHomeView))
         this.centralizeFrame(result);
-        jDesktopPane1.add(result);
+      
+      jDesktopPane1.add(result);
     }
     return result;
   }
