@@ -1,15 +1,23 @@
 package com.doo.finalActv.beautymaker.ui;
 
+import com.doo.finalActv.beautymaker.model.MenuEntry;
+import com.doo.finalActv.beautymaker.ui.client.AppointmentsView;
+import com.doo.finalActv.beautymaker.ui.client.ProfileView;
+import com.doo.finalActv.beautymaker.ui.client.ServicesView;
+import com.doo.finalActv.beautymaker.ui.client.StaffView;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.JComponent;
 
 import com.doo.finalActv.beautymaker.ui.customComponents.LogoHome;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
-public class BaseHomeView extends javax.swing.JInternalFrame {
+abstract class BaseHomeView extends javax.swing.JInternalFrame {
+  private MenuEntry[] menuEntries;
 
-  public BaseHomeView() {
+  public BaseHomeView(MenuEntry[] menuEntries) {
     initComponents();
-
+    this.menuEntries = menuEntries;
     this.initialise();
   }
 
@@ -72,14 +80,31 @@ public class BaseHomeView extends javax.swing.JInternalFrame {
   // End of variables declaration//GEN-END:variables
 
   private void initialise() {
-    this.panelMenu.add(new LogoHome());
     
-    this.setupFrameAppearance();
-    this.revalidate();
-    this.repaint();
+    this.setupMenu();
+    this.setupAppearance();
   }
 
-  private void setupFrameAppearance() {
+  private void setupMenu() {
+    this.addLogo();
+    this.showMenuItems();
+  }
+
+  private void addLogo() {
+    this.panelMenu.add(new LogoHome());
+    this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
+  }
+
+  public void showMenuItems() {
+    for (MenuEntry entry : this.menuEntries) {
+      JPanel entryPanel = entry.getMenuPanel();
+      // add margin 
+      entryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+      this.panelMenu.add(entryPanel);
+    }
+  }
+
+  private void setupAppearance() {
     putClientProperty("JInternalFrame.isPalette", Boolean.TRUE);
     setRootPaneCheckingEnabled(false);
 
@@ -91,5 +116,9 @@ public class BaseHomeView extends javax.swing.JInternalFrame {
     getRootPane().setOpaque(false);
     ((JComponent) getContentPane()).setOpaque(false);
     setBorder(null);
+    setFrameIcon(null);
+
+    this.revalidate();
+    this.repaint();
   }
 }

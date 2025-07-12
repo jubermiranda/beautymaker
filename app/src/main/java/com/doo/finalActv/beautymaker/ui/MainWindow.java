@@ -1,10 +1,19 @@
 package com.doo.finalActv.beautymaker.ui;
 
+import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
+import com.doo.finalActv.beautymaker.model.Client;
+import com.doo.finalActv.beautymaker.model.Employee;
 import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.model.User;
+import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
 import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+import com.doo.finalActv.beautymaker.session.SessionManager;
 import com.doo.finalActv.beautymaker.ui.customComponents.NotificationPanel;
 import java.awt.Dimension;
+import java.time.LocalDate;
 import java.util.EnumMap;
 import javax.swing.JInternalFrame;
 
@@ -16,13 +25,17 @@ public class MainWindow extends javax.swing.JFrame {
     HOME
   };
 
+  private final SessionManager sessionManager = SessionManager.getInstance();
   private EnumMap<AppView, JInternalFrame> views;
   private AppView currentView;
 
   public MainWindow() {
     initComponents();
+    this.mockLogin();
+
     this.startApplication();
     //this.showLoginView();
+
     this.showHomeView();
   }
 
@@ -160,7 +173,7 @@ public class MainWindow extends javax.swing.JFrame {
         result = null;
         break;
       case HOME:
-        result = new BaseHomeView();
+        result = this.createApropriateHomeView();
         break;
       default:
         result = null;
@@ -168,12 +181,27 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     if (result != null) {
-      if(!(result instanceof BaseHomeView))
+      if (!(result instanceof BaseHomeView)) {
         this.centralizeFrame(result);
-      
+      }
+
       jDesktopPane1.add(result);
     }
     return result;
+  }
+
+  private JInternalFrame createApropriateHomeView() {
+    User user = this.sessionManager.getUser();
+
+    if (user instanceof Client) {
+      return new ClientHomeView();
+    } else if (user instanceof Employee) {
+      return new EmployeeHomeView();
+
+    } else {
+      System.err.println("Unknown user type: " + user.getClass().getSimpleName());
+      return null;
+    }
   }
 
   private void centralizeFrame(JInternalFrame frame) {
@@ -197,10 +225,41 @@ public class MainWindow extends javax.swing.JFrame {
   private void setupNotificationService() {
     EventManager.getInstance().subscribe(NotificationEvent.class, event -> {
       this.showNotification(
-          event.title,
-          event.message,
-          event.type
+              event.title,
+              event.message,
+              event.type
       );
     });
+  }
+
+  private void mockLogin() {
+    String testUserName = "testUser";
+    String testUserEmail = "user_test@email.com";
+    char[] testPassword = "testPassword123".toCharArray();
+    LocalDate testBirthDate = LocalDate.of(1990, 1, 1);
+
+    try {
+      DatabaseManager.getUser(testUserEmail, testPassword);
+
+      EventManager.getInstance().publish(new RequestLoginEvent(
+              testUserEmail,
+              testPassword
+      ));
+    } catch (Exception e) {
+      if (e instanceof UserNotFoundException) {
+
+        // exemple of how to trigger the signup event (if user does not exist)
+        EventManager.getInstance().publish(new RequestSignupEvent(
+                testUserName,
+                testUserEmail,
+                testUserEmail,
+                testPassword,
+                testPassword,
+                testBirthDate
+        ));
+      } else {
+        e.printStackTrace();
+      }
+    }
   }
 }
