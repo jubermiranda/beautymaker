@@ -1,7 +1,7 @@
 package com.doo.finalActv.beautymaker.ui.customComponents;
 
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
-import com.doo.finalActv.beautymaker.serivce.event.model.MenuCardPanelEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.MenuItemSelectedEvent;
 import java.awt.Color;
 
 public class MenuCardPanel extends javax.swing.JPanel {
@@ -92,7 +92,7 @@ public class MenuCardPanel extends javax.swing.JPanel {
 
       @Override
       public void mouseClicked(java.awt.event.MouseEvent evt) {
-        EventManager.getInstance().publish(new MenuCardPanelEvent(title));
+        EventManager.getInstance().publish(new MenuItemSelectedEvent(title));
       }
     });
   }

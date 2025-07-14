@@ -2,7 +2,7 @@ package com.doo.finalActv.beautymaker.ui;
 
 import com.doo.finalActv.beautymaker.model.MenuEntry;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
-import com.doo.finalActv.beautymaker.serivce.event.model.MenuCardPanelEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.MenuItemSelectedEvent;
 import com.doo.finalActv.beautymaker.ui.client.AppointmentsView;
 import com.doo.finalActv.beautymaker.ui.client.ProfileView;
 import com.doo.finalActv.beautymaker.ui.client.ServicesView;
@@ -79,7 +79,6 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
 
   private void setupMenu() {
     this.addLogo();
-    this.menuEntries[0].select(); // Select the first menu entry by default
 
     this.setupMenuListener();
     this.addMenuItems();
@@ -91,7 +90,7 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
   }
 
   private void setupMenuListener() {
-    EventManager.getInstance().subscribe(MenuCardPanelEvent.class, event -> {
+    EventManager.getInstance().subscribe(MenuItemSelectedEvent.class, event -> {
       String key = event.menuTitle;
       for (MenuEntry entry : this.menuEntries) {
         if (entry.getKey().equals(key)) {

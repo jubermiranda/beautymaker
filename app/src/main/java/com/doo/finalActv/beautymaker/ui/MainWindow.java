@@ -7,7 +7,7 @@ import com.doo.finalActv.beautymaker.model.NotificationType;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
-import com.doo.finalActv.beautymaker.serivce.event.model.MenuCardPanelEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.MenuItemSelectedEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;

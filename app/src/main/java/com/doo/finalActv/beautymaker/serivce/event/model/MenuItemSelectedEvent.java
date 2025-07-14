@@ -1,9 +1,9 @@
 package com.doo.finalActv.beautymaker.serivce.event.model;
 
-public class MenuCardPanelEvent {
+public class MenuItemSelectedEvent {
   public String menuTitle;
 
-  public MenuCardPanelEvent(String menuTitle) {
+  public MenuItemSelectedEvent(String menuTitle) {
     this.menuTitle = menuTitle;
   }
 }
