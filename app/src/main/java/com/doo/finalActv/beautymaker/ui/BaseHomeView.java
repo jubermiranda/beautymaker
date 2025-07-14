@@ -95,7 +95,7 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
     this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
   }
 
-  public void showMenuItems() {
+  private void showMenuItems() {
     for (MenuEntry entry : this.menuEntries) {
       JPanel entryPanel = entry.getMenuPanel();
       // add margin 
