@@ -6,7 +6,10 @@ import java.awt.Color;
 
 public class MenuCardPanel extends javax.swing.JPanel {
   private String title;
+  private Color crrColor;
+  private Color hoverColor;
   private boolean isSelected = false;
+  private boolean isHovered = false;
 
   public MenuCardPanel(String title) { 
     initComponents();
@@ -60,34 +63,36 @@ public class MenuCardPanel extends javax.swing.JPanel {
   public void setSelected(boolean selected) {
     this.isSelected = selected;
     if (this.isSelected) {
-      this.setBackground(new java.awt.Color(204, 204, 204));
+      this.crrColor = new java.awt.Color(204, 204, 204);
     } else {
-      this.setBackground(new java.awt.Color(153, 153, 153));
+      this.crrColor = new java.awt.Color(153, 153, 153);
     }
 
-    this.revalidate();
-    this.repaint();
+    this.updateAppearance();
   }
   
   private void initialize() {
     this.titlePanel.setText(this.title);
+    this.crrColor = new java.awt.Color(153, 153, 153);
+    this.hoverColor = new java.awt.Color(192, 192, 192);
+
     this.setupMouseEvents();
   }
 
   private void setupMouseEvents() {
-    Color stdColor = new java.awt.Color(153, 153, 153);
-    Color hoverColor = new java.awt.Color(204, 204, 204);
     String title = this.title;
 
     this.addMouseListener(new java.awt.event.MouseAdapter() {
       @Override
       public void mouseEntered(java.awt.event.MouseEvent evt) {
-        setBackground(hoverColor);
+        MenuCardPanel.this.isHovered = true;
+        MenuCardPanel.this.updateAppearance();
       }
 
       @Override
       public void mouseExited(java.awt.event.MouseEvent evt) {
-        setBackground(stdColor);
+        MenuCardPanel.this.isHovered = false;
+        MenuCardPanel.this.updateAppearance();
       }
 
       @Override
@@ -95,5 +100,15 @@ public class MenuCardPanel extends javax.swing.JPanel {
         EventManager.getInstance().publish(new MenuItemSelectedEvent(title));
       }
     });
+  }
+
+  private void updateAppearance() {
+    if(this.isHovered) {
+      this.setBackground(this.hoverColor);
+    } else {
+      this.setBackground(this.crrColor);
+    }
+
+    this.repaint();
   }
 }
