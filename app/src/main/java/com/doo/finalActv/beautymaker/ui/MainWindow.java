@@ -7,6 +7,7 @@ import com.doo.finalActv.beautymaker.model.NotificationType;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.MenuCardPanelEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
@@ -25,6 +26,7 @@ public class MainWindow extends javax.swing.JFrame {
     HOME
   };
 
+  private final EventManager eventManager = EventManager.getInstance();
   private final SessionManager sessionManager = SessionManager.getInstance();
   private EnumMap<AppView, JInternalFrame> views;
   private AppView currentView;

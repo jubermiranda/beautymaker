@@ -1,6 +1,8 @@
 package com.doo.finalActv.beautymaker.ui;
 
 import com.doo.finalActv.beautymaker.model.MenuEntry;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.MenuCardPanelEvent;
 import com.doo.finalActv.beautymaker.ui.client.AppointmentsView;
 import com.doo.finalActv.beautymaker.ui.client.ProfileView;
 import com.doo.finalActv.beautymaker.ui.client.ServicesView;
@@ -13,12 +15,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 abstract class BaseHomeView extends javax.swing.JInternalFrame {
-  private MenuEntry[] menuEntries;
+  protected MenuEntry[] menuEntries;
 
   public BaseHomeView(MenuEntry[] menuEntries) {
     initComponents();
     this.menuEntries = menuEntries;
-    this.initialise();
+    this.initialize();
   }
 
   /**
@@ -42,17 +44,7 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
     panelView.setBackground(new java.awt.Color(102, 102, 102));
     panelView.setAlignmentX(0.0F);
     panelView.setAlignmentY(0.0F);
-
-    javax.swing.GroupLayout panelViewLayout = new javax.swing.GroupLayout(panelView);
-    panelView.setLayout(panelViewLayout);
-    panelViewLayout.setHorizontalGroup(
-      panelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 1262, Short.MAX_VALUE)
-    );
-    panelViewLayout.setVerticalGroup(
-      panelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 1044, Short.MAX_VALUE)
-    );
+    panelView.setLayout(new javax.swing.BoxLayout(panelView, javax.swing.BoxLayout.LINE_AXIS));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -61,13 +53,14 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
       .addGroup(layout.createSequentialGroup()
         .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(0, 0, 0)
-        .addComponent(panelView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap())
+        .addComponent(panelView, javax.swing.GroupLayout.DEFAULT_SIZE, 1268, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-      .addComponent(panelView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addGroup(layout.createSequentialGroup()
+        .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 0, Short.MAX_VALUE))
+      .addComponent(panelView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
 
     pack();
@@ -79,15 +72,17 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
   private javax.swing.JPanel panelView;
   // End of variables declaration//GEN-END:variables
 
-  private void initialise() {
-    
+  private void initialize() {
     this.setupMenu();
     this.setupAppearance();
   }
 
   private void setupMenu() {
     this.addLogo();
-    this.showMenuItems();
+    this.menuEntries[0].select(); // Select the first menu entry by default
+
+    this.setupMenuListener();
+    this.addMenuItems();
   }
 
   private void addLogo() {
@@ -95,10 +90,26 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
     this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
   }
 
-  private void showMenuItems() {
+  private void setupMenuListener() {
+    EventManager.getInstance().subscribe(MenuCardPanelEvent.class, event -> {
+      String key = event.menuTitle;
+      for (MenuEntry entry : this.menuEntries) {
+        if (entry.getKey().equals(key)) {
+          entry.select();
+          this.panelView.removeAll();
+          this.panelView.add(entry.getViewPanel());
+          this.panelView.revalidate();
+          this.panelView.repaint();
+        } else {
+          entry.unselect();
+        }
+      }
+    });
+  }
+
+  private void addMenuItems() {
     for (MenuEntry entry : this.menuEntries) {
       JPanel entryPanel = entry.getMenuPanel();
-      // add margin 
       entryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       this.panelMenu.add(entryPanel);
     }

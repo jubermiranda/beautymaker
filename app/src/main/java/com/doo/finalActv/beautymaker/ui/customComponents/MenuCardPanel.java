@@ -64,6 +64,9 @@ public class MenuCardPanel extends javax.swing.JPanel {
     } else {
       this.setBackground(new java.awt.Color(153, 153, 153));
     }
+
+    this.revalidate();
+    this.repaint();
   }
   
   private void initialize() {
