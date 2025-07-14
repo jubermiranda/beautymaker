@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS beautymaker.clients (
 );
 
 CREATE TABLE IF NOT EXISTS beautymaker.employees (
-  user_id INTEGER PRIMARY KEY REFERENCES beautymaker.users(id) ON DELETE CASCADE
-  hire_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  user_id INTEGER PRIMARY KEY REFERENCES beautymaker.users(id) ON DELETE CASCADE,
+  hire_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 -- function to get user type based on user_id
 CREATE OR REPLACE FUNCTION beautymaker.get_user_type(user_id_param INT)
