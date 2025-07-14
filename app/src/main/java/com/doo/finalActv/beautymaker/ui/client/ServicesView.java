@@ -31,7 +31,7 @@ public class ServicesView extends javax.swing.JPanel {
     setPreferredSize(new java.awt.Dimension(1000, 1000));
 
     jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    jLabel1.setText("Hello! this is Service view");
+    jLabel1.setText("Hello! This is Services view");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
