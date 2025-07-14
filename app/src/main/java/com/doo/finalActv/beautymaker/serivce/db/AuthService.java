@@ -25,7 +25,7 @@ public class AuthService {
     try {
       conn = ConnectionService.getConnection();
 
-      String sql = "SELECT id, username, email, birthDate, password_hash, salt FROM "
+      String sql = "SELECT id, username, email, birth_date, password_hash, salt FROM "
               + DatabaseManager.DB_SCHEMA + ".users WHERE email = ?";
 
       try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -37,7 +37,7 @@ public class AuthService {
           userId = rs.getLong("id");
           String username = rs.getString("username");
           String dbEmail = rs.getString("email");
-          LocalDate birthDate = rs.getDate("birthDate").toLocalDate();
+          LocalDate birthDate = rs.getDate("birth_date").toLocalDate();
           String passwordHash = rs.getString("password_hash");
           String salt = rs.getString("salt");
 
@@ -73,7 +73,7 @@ public class AuthService {
     try {
 
       // Step 1: Insert user into the users table
-      String sql = "INSERT INTO " + DatabaseManager.DB_SCHEMA + ".users (username, email, birthDate, password_hash, salt) "
+      String sql = "INSERT INTO " + DatabaseManager.DB_SCHEMA + ".users (username, email, birth_date, password_hash, salt) "
               + "VALUES (?, ?, ?, ?, ?) RETURNING id";
       try (PreparedStatement stmt = conn.prepareStatement(sql)) {
         stmt.setString(1, username);
@@ -136,7 +136,7 @@ public class AuthService {
         if (rs.next()) {
           String username = rs.getString("username");
           String email = rs.getString("email");
-          LocalDate birthDate = rs.getDate("birthDate").toLocalDate();
+          LocalDate birthDate = rs.getDate("birth_date").toLocalDate();
 
           switch (userType) {
             case "client" -> {

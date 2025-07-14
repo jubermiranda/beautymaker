@@ -9,9 +9,10 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public class DatabaseManager {
-
+  
+  public static final String DB_SCHEMA = "beautymaker";
   private static DatabaseManager instance;
-  protected static final String DB_SCHEMA = "beautymaker";
+  
 
   private DatabaseManager() {
     // 
