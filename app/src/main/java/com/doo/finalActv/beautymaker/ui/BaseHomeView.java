@@ -79,9 +79,10 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
 
   private void setupMenu() {
     this.addLogo();
-
     this.setupMenuListener();
     this.addMenuItems();
+
+    this.selectInitialMenuEntry();
   }
 
   private void addLogo() {
@@ -112,6 +113,13 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
       entryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       this.panelMenu.add(entryPanel);
     }
+  }
+
+  private void selectInitialMenuEntry() {
+    // Select the first menu entry by default
+    EventManager.getInstance().publish(new MenuItemSelectedEvent(
+      this.menuEntries[0].getKey()
+    ));
   }
 
   private void setupAppearance() {
