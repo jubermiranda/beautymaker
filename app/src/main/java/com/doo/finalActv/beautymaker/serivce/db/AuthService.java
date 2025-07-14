@@ -128,9 +128,9 @@ public class AuthService {
     }
 
     try (Connection conn = ConnectionService.getConnection()) {
-      String sql = "SELECT id, username, email, birthDate FROM "
+      String userSql = "SELECT id, username, email, birth_date FROM "
               + DatabaseManager.DB_SCHEMA + ".users WHERE id = ?";
-      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      try (PreparedStatement stmt = conn.prepareStatement(userSql)) {
         stmt.setLong(1, userId);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
@@ -142,9 +142,23 @@ public class AuthService {
             case "client" -> {
               return new Client((int) userId, username, email, birthDate);
             }
+
             case "employee" -> {
-              return new Employee((int) userId, username, email, birthDate);
+              // Another query to get employee-specific data
+              String employeeSql = "SELECT hire_date FROM " + DatabaseManager.DB_SCHEMA + ".employees WHERE user_id = ?";
+              try (PreparedStatement empStmt = conn.prepareStatement(employeeSql)) {
+                empStmt.setLong(1, userId);
+                ResultSet empRs = empStmt.executeQuery();
+                if (empRs.next()) {
+                  LocalDate hireDate = empRs.getDate("hire_date").toLocalDate();
+                  return new Employee((int) userId, username, email, birthDate, hireDate);
+                } else {
+                  throw new SQLException("Employee not found with user ID: " + userId);
+                }
+              }
+
             }
+
             default ->
               throw new SQLException("Unknown user type: " + userType);
           }
