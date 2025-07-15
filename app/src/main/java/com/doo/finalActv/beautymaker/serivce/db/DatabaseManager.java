@@ -71,13 +71,14 @@ public class DatabaseManager {
     ArrayList<StaffData> staffs = new ArrayList<>();
     try (Connection conn = ConnectionService.getConnection()) {
 
-      String sql = "SELECT username, rating, hire_date FROM " + DB_SCHEMA + ".staffs";
+      String sql = "SELECT username, rating, rating_count, hire_date FROM " + DB_SCHEMA + ".staffs";
       try (PreparedStatement stmt = conn.prepareStatement(sql);
            ResultSet rs = stmt.executeQuery()) {
         while (rs.next()) {
           StaffData staff = new StaffData();
           staff.name = rs.getString("username");
           staff.rating = rs.getFloat("rating");
+          staff.ratingCount = rs.getInt("rating_count");
           staff.experience = rs.getDate("hire_date").toLocalDate();
           staffs.add(staff);
         }

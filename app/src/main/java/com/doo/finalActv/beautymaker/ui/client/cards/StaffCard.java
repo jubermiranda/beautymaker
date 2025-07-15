@@ -1,20 +1,18 @@
 package com.doo.finalActv.beautymaker.ui.client.cards;
 
+import com.doo.finalActv.beautymaker.model.StaffData;
 import java.awt.Color;
 import java.awt.Component;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import javax.swing.JLabel;
 
 public class StaffCard extends javax.swing.JPanel {
-  private String name;
-  private float rating;
-  private LocalDate experience;
+  private StaffData staffData;
 
-  public StaffCard(String name, float rating, LocalDate experience) {
+  public StaffCard(StaffData staffData) {
     initComponents();
-    this.name = name;
-    this.rating = rating;
-    this.experience = experience;
+    this.staffData = staffData;
     this.initialize();
   }
 
@@ -86,7 +84,7 @@ public class StaffCard extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
   private void initialize() {
-    nameField.setText(name);
+    nameField.setText(this.staffData.name);
     experienceField.setText("Experience: " + this.getFormattedExperience());
     this.configureRatingPanel();
 
@@ -95,8 +93,10 @@ public class StaffCard extends javax.swing.JPanel {
   }
 
   private String getFormattedExperience() {
-    int years = (int) java.time.temporal.ChronoUnit.YEARS.between(experience, java.time.LocalDate.now());
-    int remaningMonths = (int) java.time.temporal.ChronoUnit.MONTHS.between(experience.plusYears(years), java.time.LocalDate.now());
+    int years = (int) java.time.temporal.ChronoUnit.YEARS.between(this.staffData.experience, java.time.LocalDate.now());
+    int remaningMonths = (int) ChronoUnit.MONTHS.between(
+        this.staffData.experience.plusYears(years), java.time.LocalDate.now()
+    );
 
     String result = years + " year(s)";
     if (remaningMonths > 0) {
@@ -107,12 +107,20 @@ public class StaffCard extends javax.swing.JPanel {
 
   private void configureRatingPanel() {
     ratingPanel.removeAll();
-    if (this.rating < 0) {
+    if (this.staffData.ratingCount == 0) {
       JLabel message = new JLabel("Not rated yet");
       ratingPanel.add(message);
     } else {
       // TODO : Implement a visual representation of the rating
-      JLabel ratingLabel = new JLabel(String.format("Rating: %.1f", this.rating));
+      String ratingMessage = (
+          "★".repeat((int) this.staffData.rating) +
+          "☆".repeat(5 - (int) this.staffData.rating) +
+          " (" + String.format("%.1f", this.staffData.rating) + 
+          " - " +
+          this.staffData.ratingCount + " ratings)"
+      );
+
+      JLabel ratingLabel = new JLabel(ratingMessage);
       ratingPanel.add(ratingLabel);
     }
     

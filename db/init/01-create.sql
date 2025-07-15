@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS beautymaker.employee_ratings (
   employee_id INTEGER NOT NULL REFERENCES beautymaker.employees(user_id) ON DELETE CASCADE,
   client_id INTEGER NOT NULL REFERENCES beautymaker.clients(user_id) ON DELETE CASCADE,
   rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-  comment VARCHAR(500),
+  rate_comment VARCHAR(500),
   -- TODO: appointment_id INTEGER NOT NULL REFERENCES beautymaker.appointments(id) ON DELETE CASCADE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -72,6 +72,8 @@ SELECT
     u.id AS user_id,
     u.username as username,
     beautymaker.get_employee_rating(u.id) AS rating,
+    -- rating count
+    (SELECT COUNT(*) FROM beautymaker.employee_ratings er WHERE er.employee_id = u.id) AS rating_count,
     e.hire_date AS hire_date
 FROM
     beautymaker.users u

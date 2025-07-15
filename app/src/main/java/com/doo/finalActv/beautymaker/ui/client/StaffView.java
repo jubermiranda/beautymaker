@@ -76,7 +76,7 @@ public class StaffView extends javax.swing.JPanel implements DataChangeListener 
     staffContainerPanel.add(Box.createVerticalStrut(20));
     
     for (StaffData staff : staffs) {
-      StaffCard staffCard = new StaffCard(staff.name, staff.rating, staff.experience);
+      StaffCard staffCard = new StaffCard(staff);
       staffContainerPanel.add(staffCard);
       staffContainerPanel.add(Box.createVerticalStrut(20));
     }
