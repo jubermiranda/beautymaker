@@ -146,7 +146,7 @@ Classe base para todos os painéis internos da aplicação.
 **Configurações:**
 - Tamanho padrão: 800x600 pixels
 - Remove decorações padrão do frame
-- Transparência (funcionalidade futura planejada)
+- Torna componente transparente
 - Desabilita redimensionamento
 
 **Métodos:**
