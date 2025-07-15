@@ -46,7 +46,7 @@ public class TestUtils {
   }
 
   private static void signupNewUser() {
-    // exemple of how to trigger the signup event (if user does not exist)
+    // example of how to trigger the signup event (if user does not exist)
     EventManager.getInstance().publish(new RequestSignupEvent(
             testUserName,
             testUserEmail,
