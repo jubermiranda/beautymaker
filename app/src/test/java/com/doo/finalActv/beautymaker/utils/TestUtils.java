@@ -21,32 +21,60 @@ public class TestUtils {
 
 
   // examples of how to trigger the login/signup events
+
   public static void loginTestUser() {
+
+    if(this.userExists()) {
+      loginExistingUser();
+
+    } else {
+      signupNewUser();
+    }
+  }
+
+  private static void loginExistingUser() {
     try {
-      DatabaseManager.getUser(testUserEmail, testPassword);
 
       // exemple of how to trigger the login event (if user exists)
       EventManager.getInstance().publish(new RequestLoginEvent(
           testUserEmail,
           testPassword
       ));
-    } catch (Exception e){
-      if(e instanceof UserNotFoundException) {
 
-        // exemple of how to trigger the signup event (if user does not exist)
-        EventManager.getInstance().publish(new RequestSignupEvent(
-            testUserName,
-            testUserEmail,
-            testUserEmail,
-            testPassword,
-            testPassword,
-            testBirthDate
-        ));
-      } else {
-        e.printStackTrace();
-      }
+    } catch (UserNotFoundException e) {
+      e.printStackTrace();
     }
   }
+
+  private static void signupNewUser() {
+    try {
+      // exemple of how to trigger the signup event (if user does not exist)
+      EventManager.getInstance().publish(new RequestSignupEvent(
+          testUserName,
+          testUserEmail,
+          testUserEmail, // confirm email
+          testPassword,
+          testPassword, // confirm password
+          testBirthDate
+      ));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  // a trick to check if the user exists in the database
+  // this is not a good practice for production code, but can be useful for testing
+  // try ge user from db, and a exception will be thrown if user does not exist
+  private static boolean userExists() {
+    try {
+      DatabaseManager.getUser(testUserEmail, testPassword);
+      return true;
+    } catch (UserNotFoundException e) {
+      return false;
+    }
+  }
+
 
   public static User getTestUser() {
     User testUser = new Client(
