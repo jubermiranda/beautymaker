@@ -146,7 +146,7 @@ Classe base para todos os painéis internos da aplicação.
 **Configurações:**
 - Tamanho padrão: 800x600 pixels
 - Remove decorações padrão do frame
-- Torna componente transparente
+- Transparência (funcionalidade futura planejada)
 - Desabilita redimensionamento
 
 **Métodos:**
@@ -294,7 +294,7 @@ UI Component → Event → EventManager → Service Layer → Database
 - Proteção de acesso baseada em tipo de usuário
 
 ### Validação de Formulários
-- Validação em tempo real em campos críticos
+- Validação após submissão de formulários
 - Feedback visual para erros
 - Integração com sistema de validação backend
 
