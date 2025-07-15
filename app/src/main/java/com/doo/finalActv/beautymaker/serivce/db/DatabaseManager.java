@@ -25,6 +25,14 @@ public class DatabaseManager {
     return instance;
   }
 
+  public boolean dbIsAvailable() {
+    try (Connection conn = ConnectionService.getConnection()) {
+      return conn != null && !conn.isClosed();
+    } catch (SQLException e) {
+      return false;
+    }
+  }
+
   public static User getUser(String email, char[] password) throws SQLException, UserNotFoundException, InvalidPasswordException {
     return AuthService.login(email, password);
   }
