@@ -4,6 +4,10 @@
  */
 package com.doo.finalActv.beautymaker.ui;
 
+import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.ui.customComponents.InternalView;
 
 /**
@@ -17,6 +21,7 @@ public class LoginView extends InternalView {
    */
   public LoginView() {
     initComponents();
+    this.initialize();
   }
 
   /**
@@ -115,4 +120,24 @@ public class LoginView extends InternalView {
   private javax.swing.JPasswordField jPasswordField1;
   private javax.swing.JTextField jTextField1;
   // End of variables declaration//GEN-END:variables
+
+  private void initialize() {
+    DatabaseManager dbManager = DatabaseManager.getInstance();
+    if (!dbManager.dbIsAvailable()) {
+      jButton1.setEnabled(false);
+      jButton2.setEnabled(false);
+      jTextField1.setEnabled(false);
+      jPasswordField1.setEnabled(false);
+      EventManager.getInstance().publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Database Error",
+          "Database is not available. Please check:\n*your connection\n*database server status"
+      ));
+  } else {
+      jButton1.setEnabled(true);
+      jButton2.setEnabled(true);
+      jTextField1.setEnabled(true);
+      jPasswordField1.setEnabled(true);
+    }
+  }
 }
