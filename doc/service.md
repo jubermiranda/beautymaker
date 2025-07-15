@@ -26,7 +26,7 @@ Classe principal para gerenciamento do banco de dados, implementando o padrão S
 - `getInstance()` - Retorna a instância singleton
 - `dbIsAvailable()` - Verifica disponibilidade da conexão
 - `getUser(String email, char[] password)` - Autentica usuário via AuthService
-- `register(String username, String email, char[] password, LocalDate birthDate)` - Registra novo usuário
+- `register(String username, String email, char[] password, LocalDate birthDate)` - Registra novo usuário via AuthService
 
 **Funcionalidade:**
 Centraliza o acesso aos dados e coordena operações de banco através de outros serviços especializados.

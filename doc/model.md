@@ -123,7 +123,7 @@ NotificationType (enum)
 ## Considerações de Desenvolvimento
 
 - As classes User, Client e Employee seguem princípios de POO com herança bem definida
-- StaffData utiliza campos públicos, o que pode ser refatorado para melhor encapsulamento
+- StaffData utiliza campos públicos intencionalmente por servir como DTO (Data Transfer Object)
 - O sistema está preparado para expansão com novos tipos de usuários
 - A validação de dados é implementada parcialmente no método equals() da classe User
 
