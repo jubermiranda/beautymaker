@@ -38,7 +38,7 @@ public class TestUtils {
   }
 
   private static void loginExistingUser() {
-    // exemple of how to trigger the login event (if user exists)
+    // example of how to trigger the login event (if user exists)
     EventManager.getInstance().publish(new RequestLoginEvent(
             testUserEmail,
             testPassword
