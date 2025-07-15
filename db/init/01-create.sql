@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS beautymaker.employee_ratings (
 );
 
 -- employee rating function
--- Its returns the average rating of an employee based on their ratings.
+-- It returns the average rating of an employee based on their ratings.
 -- or returns -1 if there are no ratings for the employee.
 CREATE OR REPLACE FUNCTION beautymaker.get_employee_rating(employee_id_param INT)
 RETURNS FLOAT AS $$
