@@ -3,10 +3,12 @@ package com.doo.finalActv.beautymaker.serivce.db;
 import com.doo.finalActv.beautymaker.exception.IllegalSignupException;
 import com.doo.finalActv.beautymaker.exception.InvalidPasswordException;
 import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
+import com.doo.finalActv.beautymaker.model.StaffData;
 import com.doo.finalActv.beautymaker.model.User;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class DatabaseManager {
   
@@ -60,6 +62,29 @@ public class DatabaseManager {
     } catch (SQLException e) {
       throw new SQLException("Error retrieving user type for ID: " + id, e);
     }
+  }
+
+  public ArrayList<StaffData> getStaffs() {
+    ArrayList<StaffData> staffs = new ArrayList<>();
+    try (Connection conn = ConnectionService.getConnection()) {
+      // TODO query to get staff data
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    // Mock data for demonstration purposes. 
+    // wait some milis
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    staffs.add(new StaffData("Alice", 4.5f, LocalDate.of(2015, 5, 20)));
+    staffs.add(new StaffData("Bob", 4.0f, LocalDate.of(2018, 3, 15)));
+    staffs.add(new StaffData("Charlie", 4.8f, LocalDate.of(2020, 7, 10)));
+    staffs.add(new StaffData("Diana", 4.2f, LocalDate.of(2019, 11, 5)));
+    return staffs;
   }
 
 }

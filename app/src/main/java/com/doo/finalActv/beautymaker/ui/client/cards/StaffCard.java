@@ -1,15 +1,15 @@
-package com.doo.finalActv.beautymaker.ui.client;
+package com.doo.finalActv.beautymaker.ui.client.cards;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.time.LocalDate;
 
-public class StaffCardView extends javax.swing.JPanel {
+public class StaffCard extends javax.swing.JPanel {
   private String name;
   private float rating;
   private LocalDate experience;
 
-  public StaffCardView(String name, float rating, LocalDate experience) {
+  public StaffCard(String name, float rating, LocalDate experience) {
     initComponents();
     this.name = name;
     this.rating = rating;

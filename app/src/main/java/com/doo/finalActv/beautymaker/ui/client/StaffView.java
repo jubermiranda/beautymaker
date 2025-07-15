@@ -1,9 +1,13 @@
 package com.doo.finalActv.beautymaker.ui.client;
 
-import java.time.LocalDate;
+import com.doo.finalActv.beautymaker.model.StaffData;
+import com.doo.finalActv.beautymaker.serivce.appdata.ContentProvider;
+import com.doo.finalActv.beautymaker.serivce.appdata.DataChangeListener;
+import com.doo.finalActv.beautymaker.ui.client.cards.StaffCard;
+import java.util.ArrayList;
 import javax.swing.Box;
 
-public class StaffView extends javax.swing.JPanel {
+public class StaffView extends javax.swing.JPanel implements DataChangeListener {
 
 
   public StaffView() {
@@ -61,18 +65,25 @@ public class StaffView extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
   private void initialize() {
-    staffContainerPanel.add(Box.createVerticalStrut(20));
-    // create some test StaffCards
-    for(int i = 0; i < 10; i++) {
-      String name = "Staff " + (i + 1);
-      float rating = (float) (Math.random() * 5);
-      LocalDate hireDate = LocalDate.now().minusDays((long) (Math.random() * 365* 15));
+    ContentProvider.getInstance().addListener(this, "staffs");
+  }
 
-      StaffCardView staffCard = new StaffCardView(name, rating, hireDate);
+  @Override
+  public void onDataChanged() {
+    ArrayList<StaffData> staffs = ContentProvider.getInstance().getStaffs();
+    staffContainerPanel.removeAll();
+    staffContainerPanel.add(Box.createVerticalStrut(20));
+    
+    for (StaffData staff : staffs) {
+      StaffCard staffCard = new StaffCard(staff.name, staff.rating, staff.experience);
       staffContainerPanel.add(staffCard);
       staffContainerPanel.add(Box.createVerticalStrut(20));
-      staffContainerPanel.revalidate();
     }
-    this.repaint();
+    if (staffs.isEmpty()) {
+      staffContainerPanel.add(new javax.swing.JLabel("No staff available"));
+    }
+
+    staffContainerPanel.revalidate();
+    staffContainerPanel.repaint();
   }
 }
