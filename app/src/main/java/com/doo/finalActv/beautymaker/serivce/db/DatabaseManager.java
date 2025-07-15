@@ -3,15 +3,21 @@ package com.doo.finalActv.beautymaker.serivce.db;
 import com.doo.finalActv.beautymaker.exception.IllegalSignupException;
 import com.doo.finalActv.beautymaker.exception.InvalidPasswordException;
 import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
+import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.model.StaffData;
 import com.doo.finalActv.beautymaker.model.User;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class DatabaseManager {
-
+  
+  public static final String DB_SCHEMA = "beautymaker";
   private static DatabaseManager instance;
-  protected static final String DB_SCHEMA = "beautymaker";
+  
 
   private DatabaseManager() {
     // 
@@ -22,6 +28,14 @@ public class DatabaseManager {
       instance = new DatabaseManager();
     }
     return instance;
+  }
+
+  public boolean dbIsAvailable() {
+    try (Connection conn = ConnectionService.getConnection()) {
+      return conn != null && !conn.isClosed();
+    } catch (SQLException e) {
+      return false;
+    }
   }
 
   public static User getUser(String email, char[] password) throws SQLException, UserNotFoundException, InvalidPasswordException {
@@ -51,6 +65,33 @@ public class DatabaseManager {
     } catch (SQLException e) {
       throw new SQLException("Error retrieving user type for ID: " + id, e);
     }
+  }
+
+  public ArrayList<StaffData> getStaffs() {
+    ArrayList<StaffData> staffs = new ArrayList<>();
+    try (Connection conn = ConnectionService.getConnection()) {
+
+      String sql = "SELECT username, rating, rating_count, hire_date FROM " + DB_SCHEMA + ".staffs";
+      try (PreparedStatement stmt = conn.prepareStatement(sql);
+           ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          StaffData staff = new StaffData();
+          staff.name = rs.getString("username");
+          staff.rating = rs.getFloat("rating");
+          staff.ratingCount = rs.getInt("rating_count");
+          staff.experience = rs.getDate("hire_date").toLocalDate();
+          staffs.add(staff);
+        }
+      }
+
+    } catch (SQLException e) {
+      EventManager.getInstance().publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Database Error",
+          "Failed to retrieve staff data: " + e.getMessage()
+      ));
+    }
+    return staffs;
   }
 
 }

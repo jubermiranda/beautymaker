@@ -25,7 +25,7 @@ public class AuthService {
     try {
       conn = ConnectionService.getConnection();
 
-      String sql = "SELECT id, username, email, birthDate, password_hash, salt FROM "
+      String sql = "SELECT id, username, email, birth_date, password_hash, salt FROM "
               + DatabaseManager.DB_SCHEMA + ".users WHERE email = ?";
 
       try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -37,7 +37,7 @@ public class AuthService {
           userId = rs.getLong("id");
           String username = rs.getString("username");
           String dbEmail = rs.getString("email");
-          LocalDate birthDate = rs.getDate("birthDate").toLocalDate();
+          LocalDate birthDate = rs.getDate("birth_date").toLocalDate();
           String passwordHash = rs.getString("password_hash");
           String salt = rs.getString("salt");
 
@@ -73,7 +73,7 @@ public class AuthService {
     try {
 
       // Step 1: Insert user into the users table
-      String sql = "INSERT INTO " + DatabaseManager.DB_SCHEMA + ".users (username, email, birthDate, password_hash, salt) "
+      String sql = "INSERT INTO " + DatabaseManager.DB_SCHEMA + ".users (username, email, birth_date, password_hash, salt) "
               + "VALUES (?, ?, ?, ?, ?) RETURNING id";
       try (PreparedStatement stmt = conn.prepareStatement(sql)) {
         stmt.setString(1, username);
@@ -128,23 +128,37 @@ public class AuthService {
     }
 
     try (Connection conn = ConnectionService.getConnection()) {
-      String sql = "SELECT id, username, email, birthDate FROM "
+      String userSql = "SELECT id, username, email, birth_date FROM "
               + DatabaseManager.DB_SCHEMA + ".users WHERE id = ?";
-      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      try (PreparedStatement stmt = conn.prepareStatement(userSql)) {
         stmt.setLong(1, userId);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
           String username = rs.getString("username");
           String email = rs.getString("email");
-          LocalDate birthDate = rs.getDate("birthDate").toLocalDate();
+          LocalDate birthDate = rs.getDate("birth_date").toLocalDate();
 
           switch (userType) {
             case "client" -> {
               return new Client((int) userId, username, email, birthDate);
             }
+
             case "employee" -> {
-              return new Employee((int) userId, username, email, birthDate);
+              // Another query to get employee-specific data
+              String employeeSql = "SELECT hire_date FROM " + DatabaseManager.DB_SCHEMA + ".employees WHERE user_id = ?";
+              try (PreparedStatement empStmt = conn.prepareStatement(employeeSql)) {
+                empStmt.setLong(1, userId);
+                ResultSet empRs = empStmt.executeQuery();
+                if (empRs.next()) {
+                  LocalDate hireDate = empRs.getDate("hire_date").toLocalDate();
+                  return new Employee((int) userId, username, email, birthDate, hireDate);
+                } else {
+                  throw new SQLException("Employee not found with user ID: " + userId);
+                }
+              }
+
             }
+
             default ->
               throw new SQLException("Unknown user type: " + userType);
           }
