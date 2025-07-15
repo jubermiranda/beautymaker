@@ -1,21 +1,20 @@
 package com.doo.finalActv.beautymaker.ui.client;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+import com.doo.finalActv.beautymaker.model.StaffData;
+import com.doo.finalActv.beautymaker.serivce.appdata.ContentProvider;
+import com.doo.finalActv.beautymaker.serivce.appdata.DataChangeListener;
+import com.doo.finalActv.beautymaker.ui.client.cards.StaffCard;
+import java.util.ArrayList;
+import javax.swing.Box;
+import javax.swing.JLabel;
 
-/**
- *
- * @author user
- */
-public class StaffView extends javax.swing.JPanel {
+public class StaffView extends javax.swing.JPanel implements DataChangeListener {
 
-  /**
-   * Creates new form StaffView
-   */
+
   public StaffView() {
     initComponents();
+    
+    this.initialize();
   }
 
   /**
@@ -28,28 +27,66 @@ public class StaffView extends javax.swing.JPanel {
   private void initComponents() {
 
     jLabel1 = new javax.swing.JLabel();
+    jScrollPane1 = new javax.swing.JScrollPane();
+    staffContainerPanel = new javax.swing.JPanel();
 
+    jLabel1.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
     jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    jLabel1.setText("Hello! this is staff view");
+    jLabel1.setText("Beauty Agents");
+
+    staffContainerPanel.setLayout(new javax.swing.BoxLayout(staffContainerPanel, javax.swing.BoxLayout.Y_AXIS));
+    jScrollPane1.setViewportView(staffContainerPanel);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(0, 524, Short.MAX_VALUE))
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
+          .addComponent(jScrollPane1))
+        .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(0, 731, Short.MAX_VALUE))
+        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 882, Short.MAX_VALUE)
+        .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JScrollPane jScrollPane1;
+  private javax.swing.JPanel staffContainerPanel;
   // End of variables declaration//GEN-END:variables
+
+  private void initialize() {
+    ContentProvider.getInstance().addListener(this, "staffs");
+  }
+
+  @Override
+  public void onDataChanged() {
+    ArrayList<StaffData> staffs = ContentProvider.getInstance().getStaffs();
+    staffContainerPanel.removeAll();
+    staffContainerPanel.add(Box.createVerticalStrut(20));
+    
+    for (StaffData staff : staffs) {
+      StaffCard staffCard = new StaffCard(staff);
+      staffContainerPanel.add(staffCard);
+      staffContainerPanel.add(Box.createVerticalStrut(20));
+    }
+    if (staffs.isEmpty()) {
+      JLabel noStaffLabel = new javax.swing.JLabel("No staff available");
+
+      staffContainerPanel.add(noStaffLabel);
+    }
+
+    staffContainerPanel.revalidate();
+    staffContainerPanel.repaint();
+  }
 }

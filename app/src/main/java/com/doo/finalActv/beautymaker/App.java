@@ -14,7 +14,7 @@ public class App {
     mainWindow.setVisible(true);
 
     // Test the notification system
-    testNotification(mainWindow);
+    //testNotification(mainWindow);
 
   }
 
