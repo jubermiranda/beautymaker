@@ -139,6 +139,37 @@ Transporta informações de notificações através do sistema de eventos.
 
 Contém serviços relacionados aos dados da aplicação e configurações.
 
+#### ContentProvider
+
+**Descrição**: Provedor central de dados da aplicação que implementa padrão Singleton e Observer para gerenciamento reativo de dados.
+
+**Funcionalidades Principais**:
+- `getInstance()` - Retorna instância singleton
+- `getUser()` - Obtém usuário atual via SessionManager  
+- `getStaffs()` - Retorna lista de funcionários (StaffData)
+- `addListener(DataChangeListener listener, String key)` - Registra listener para mudanças de dados
+- `removeListener(DataChangeListener listener, String key)` - Remove listener
+- `notifyListeners(String key)` - Notifica listeners específicos
+- `notifyListeners()` - Notifica todos os listeners
+
+**Características**:
+- **Singleton**: Instância única garantindo acesso global aos dados
+- **Observer Pattern**: Sistema de notificação para atualizações reativas da UI
+- **Carregamento Assíncrono**: Dados carregados em background via CompletableFuture
+- **Integração com Database**: Utiliza DatabaseManager para buscar dados dos funcionários
+- **Context Awareness**: Integração com SessionManager para contexto do usuário
+
+**Uso Típico**:
+```java
+// Registrar para receber notificações de mudanças nos dados
+ContentProvider.getInstance().addListener(this, "staffs");
+
+// Obter dados atuais
+ArrayList<StaffData> staffs = ContentProvider.getInstance().getStaffs();
+```
+
+**Interface DataChangeListener**: Define contrato `onDataChanged()` para componentes que precisam reagir a mudanças nos dados.
+
 ### Utils (`utils/`)
 
 Contém classes utilitárias e helpers, incluindo validadores e formatadores.
