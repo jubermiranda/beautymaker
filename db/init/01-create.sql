@@ -65,3 +65,16 @@ BEGIN
         RETURN avg_rating;
     END IF;
 END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW beautymaker.staffs AS
+SELECT
+    u.id AS user_id,
+    u.username as username,
+    beautymaker.get_employee_rating(u.id) AS rating,
+    e.hire_date AS hire_date
+FROM
+    beautymaker.users u
+JOIN
+    beautymaker.employees e ON u.id = e.user_id;
+

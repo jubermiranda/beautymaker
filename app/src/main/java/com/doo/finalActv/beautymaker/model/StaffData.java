@@ -13,4 +13,10 @@ public class StaffData {
     this.rating = rating;
     this.experience = experience;
   }
+
+  public StaffData() {
+    this.name = "";
+    this.rating = 0.0f;
+    this.experience = LocalDate.now();
+  }
 }

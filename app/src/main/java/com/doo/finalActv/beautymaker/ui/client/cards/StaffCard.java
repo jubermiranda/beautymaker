@@ -3,6 +3,7 @@ package com.doo.finalActv.beautymaker.ui.client.cards;
 import java.awt.Color;
 import java.awt.Component;
 import java.time.LocalDate;
+import javax.swing.JLabel;
 
 public class StaffCard extends javax.swing.JPanel {
   private String name;
@@ -28,7 +29,7 @@ public class StaffCard extends javax.swing.JPanel {
 
     nameField = new javax.swing.JLabel();
     experienceField = new javax.swing.JLabel();
-    jPanel1 = new javax.swing.JPanel();
+    ratingPanel = new javax.swing.JPanel();
     jLabel1 = new javax.swing.JLabel();
 
     setBackground(new java.awt.Color(255, 255, 255));
@@ -40,18 +41,8 @@ public class StaffCard extends javax.swing.JPanel {
     experienceField.setForeground(new java.awt.Color(0, 0, 0));
     experienceField.setText("Experience:");
 
-    jPanel1.setOpaque(false);
-
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
-    jPanel1Layout.setVerticalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
+    ratingPanel.setOpaque(false);
+    ratingPanel.setLayout(new java.awt.GridBagLayout());
 
     jLabel1.setForeground(new java.awt.Color(0, 0, 0));
     jLabel1.setText("Rate:");
@@ -67,7 +58,7 @@ public class StaffCard extends javax.swing.JPanel {
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(ratingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
           .addComponent(nameField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
@@ -80,7 +71,7 @@ public class StaffCard extends javax.swing.JPanel {
         .addComponent(experienceField, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(ratingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
         .addContainerGap(19, Short.MAX_VALUE))
     );
@@ -90,13 +81,14 @@ public class StaffCard extends javax.swing.JPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel experienceField;
   private javax.swing.JLabel jLabel1;
-  private javax.swing.JPanel jPanel1;
   private javax.swing.JLabel nameField;
+  private javax.swing.JPanel ratingPanel;
   // End of variables declaration//GEN-END:variables
 
   private void initialize() {
     nameField.setText(name);
     experienceField.setText("Experience: " + this.getFormattedExperience());
+    this.configureRatingPanel();
 
     this.setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLACK, 2));
     this.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -111,6 +103,21 @@ public class StaffCard extends javax.swing.JPanel {
       result += " and " + remaningMonths + " month(s)"; 
     }
     return result;
+  }
+
+  private void configureRatingPanel() {
+    ratingPanel.removeAll();
+    if (this.rating < 0) {
+      JLabel message = new JLabel("Not rated yet");
+      ratingPanel.add(message);
+    } else {
+      // TODO : Implement a visual representation of the rating
+      JLabel ratingLabel = new JLabel(String.format("Rating: %.1f", this.rating));
+      ratingPanel.add(ratingLabel);
+    }
+    
+    ratingPanel.revalidate();
+    ratingPanel.repaint();
   }
 
 }

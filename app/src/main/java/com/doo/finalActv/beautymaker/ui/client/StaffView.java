@@ -6,6 +6,7 @@ import com.doo.finalActv.beautymaker.serivce.appdata.DataChangeListener;
 import com.doo.finalActv.beautymaker.ui.client.cards.StaffCard;
 import java.util.ArrayList;
 import javax.swing.Box;
+import javax.swing.JLabel;
 
 public class StaffView extends javax.swing.JPanel implements DataChangeListener {
 
@@ -80,7 +81,9 @@ public class StaffView extends javax.swing.JPanel implements DataChangeListener 
       staffContainerPanel.add(Box.createVerticalStrut(20));
     }
     if (staffs.isEmpty()) {
-      staffContainerPanel.add(new javax.swing.JLabel("No staff available"));
+      JLabel noStaffLabel = new javax.swing.JLabel("No staff available");
+
+      staffContainerPanel.add(noStaffLabel);
     }
 
     staffContainerPanel.revalidate();

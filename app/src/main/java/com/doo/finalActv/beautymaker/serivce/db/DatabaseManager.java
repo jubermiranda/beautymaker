@@ -3,8 +3,11 @@ package com.doo.finalActv.beautymaker.serivce.db;
 import com.doo.finalActv.beautymaker.exception.IllegalSignupException;
 import com.doo.finalActv.beautymaker.exception.InvalidPasswordException;
 import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
+import com.doo.finalActv.beautymaker.model.NotificationType;
 import com.doo.finalActv.beautymaker.model.StaffData;
 import com.doo.finalActv.beautymaker.model.User;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -67,23 +70,26 @@ public class DatabaseManager {
   public ArrayList<StaffData> getStaffs() {
     ArrayList<StaffData> staffs = new ArrayList<>();
     try (Connection conn = ConnectionService.getConnection()) {
-      // TODO query to get staff data
+
+      String sql = "SELECT username, rating, hire_date FROM " + DB_SCHEMA + ".staffs";
+      try (PreparedStatement stmt = conn.prepareStatement(sql);
+           ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          StaffData staff = new StaffData();
+          staff.name = rs.getString("username");
+          staff.rating = rs.getFloat("rating");
+          staff.experience = rs.getDate("hire_date").toLocalDate();
+          staffs.add(staff);
+        }
+      }
 
     } catch (SQLException e) {
-      e.printStackTrace();
+      EventManager.getInstance().publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Database Error",
+          "Failed to retrieve staff data: " + e.getMessage()
+      ));
     }
-
-    // Mock data for demonstration purposes. 
-    // wait some milis
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-    staffs.add(new StaffData("Alice", 4.5f, LocalDate.of(2015, 5, 20)));
-    staffs.add(new StaffData("Bob", 4.0f, LocalDate.of(2018, 3, 15)));
-    staffs.add(new StaffData("Charlie", 4.8f, LocalDate.of(2020, 7, 10)));
-    staffs.add(new StaffData("Diana", 4.2f, LocalDate.of(2019, 11, 5)));
     return staffs;
   }
 
