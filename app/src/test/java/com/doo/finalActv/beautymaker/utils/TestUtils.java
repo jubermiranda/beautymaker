@@ -9,6 +9,7 @@ import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLogoutEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
 import com.doo.finalActv.beautymaker.session.SessionManager;
+import java.sql.SQLException;
 
 import java.time.LocalDate;
 
@@ -19,12 +20,10 @@ public class TestUtils {
   private static final char[] testPassword = "testPassword123".toCharArray();
   private static final LocalDate testBirthDate = LocalDate.of(1990, 1, 1);
 
-
   // examples of how to trigger the login/signup events
-
   public static void loginTestUser() {
 
-    if(this.userExists()) {
+    if (userExists()) {
       loginExistingUser();
 
     } else {
@@ -33,35 +32,24 @@ public class TestUtils {
   }
 
   private static void loginExistingUser() {
-    try {
-
-      // exemple of how to trigger the login event (if user exists)
-      EventManager.getInstance().publish(new RequestLoginEvent(
-          testUserEmail,
-          testPassword
-      ));
-
-    } catch (UserNotFoundException e) {
-      e.printStackTrace();
-    }
+    // exemple of how to trigger the login event (if user exists)
+    EventManager.getInstance().publish(new RequestLoginEvent(
+            testUserEmail,
+            testPassword
+    ));
   }
 
   private static void signupNewUser() {
-    try {
-      // exemple of how to trigger the signup event (if user does not exist)
-      EventManager.getInstance().publish(new RequestSignupEvent(
-          testUserName,
-          testUserEmail,
-          testUserEmail, // confirm email
-          testPassword,
-          testPassword, // confirm password
-          testBirthDate
-      ));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    // exemple of how to trigger the signup event (if user does not exist)
+    EventManager.getInstance().publish(new RequestSignupEvent(
+            testUserName,
+            testUserEmail,
+            testUserEmail, // confirm email
+            testPassword,
+            testPassword, // confirm password
+            testBirthDate
+    ));
   }
-
 
   // a trick to check if the user exists in the database
   // this is not a good practice for production code, but can be useful for testing
@@ -70,24 +58,23 @@ public class TestUtils {
     try {
       DatabaseManager.getUser(testUserEmail, testPassword);
       return true;
-    } catch (UserNotFoundException e) {
+    } catch (Exception e) {
       return false;
     }
   }
 
-
   public static User getTestUser() {
     User testUser = new Client(
-        1,
-        testUserName,
-        testUserEmail,
-        testBirthDate
+            1,
+            testUserName,
+            testUserEmail,
+            testBirthDate
     );
     return testUser;
   }
 
   public static void logoutTestUser() {
-    if(SessionManager.getInstance().userIsLoggedIn()) {
+    if (SessionManager.getInstance().userIsLoggedIn()) {
       EventManager.getInstance().publish(new RequestLogoutEvent());
     }
   }
