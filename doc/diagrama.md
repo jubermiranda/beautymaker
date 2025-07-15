@@ -250,25 +250,27 @@ classDiagram
 classDiagram
     class UIComponents {
         <<package>>
-        Views, Panels, Forms
+        +Views
+        +Panels
+        +Forms
     }
     
     class SessionLayer {
         <<package>>
-        SessionManager
+        +SessionManager
     }
     
     class ServiceLayer {
         <<package>>
-        EventManager
-        DatabaseManager
-        ContentProvider
+        +EventManager
+        +DatabaseManager
+        +ContentProvider
     }
     
     class ModelLayer {
         <<package>>
-        User, Client, Employee
-        StaffData, NotificationType
+        +User, Client, Employee
+        +StaffData, NotificationType
     }
     
     UIComponents --> SessionLayer : interage via eventos
