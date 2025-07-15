@@ -7,10 +7,12 @@ import com.doo.finalActv.beautymaker.model.NotificationType;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
-import com.doo.finalActv.beautymaker.serivce.event.model.MenuItemSelectedEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.ShowSignupViewEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.SuccessfulLoginEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.UserLoggedOutEvent;
 import com.doo.finalActv.beautymaker.session.SessionManager;
 import com.doo.finalActv.beautymaker.ui.customComponents.NotificationPanel;
 import java.awt.Dimension;
@@ -33,12 +35,12 @@ public class MainWindow extends javax.swing.JFrame {
 
   public MainWindow() {
     initComponents();
-    this.mockLogin();
 
     this.startApplication();
-    //this.showLoginView();
+    this.showLoginView();
 
-    this.showHomeView();
+    // test porpose: mock login
+    this.mockLogin();
   }
 
   /**
@@ -121,6 +123,11 @@ public class MainWindow extends javax.swing.JFrame {
 
   private void showHomeView() {
     this.currentView = AppView.HOME;
+    this.updateView();
+  }
+
+  private void showSignupView() {
+    this.currentView = AppView.SIGNUP;
     this.updateView();
   }
 
@@ -222,6 +229,7 @@ public class MainWindow extends javax.swing.JFrame {
 
   private void setupServices() {
     this.setupNotificationService();
+    this.setupSwitchViewsService();
   }
 
   private void setupNotificationService() {
@@ -231,6 +239,20 @@ public class MainWindow extends javax.swing.JFrame {
               event.message,
               event.type
       );
+    });
+  }
+
+  private void setupSwitchViewsService() {
+    EventManager.getInstance().subscribe(SuccessfulLoginEvent.class, event -> {
+      this.showHomeView();
+    });
+
+    EventManager.getInstance().subscribe(UserLoggedOutEvent.class, event -> {
+      this.showLoginView();
+    });
+
+    EventManager.getInstance().subscribe(ShowSignupViewEvent.class, event -> {
+      this.showSignupView();
     });
   }
 
