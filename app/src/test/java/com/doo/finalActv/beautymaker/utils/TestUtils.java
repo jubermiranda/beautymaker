@@ -59,7 +59,7 @@ public class TestUtils {
 
   // a trick to check if the user exists in the database
   // this is not a good practice for production code, but can be useful for testing
-  // try ge user from db, and a exception will be thrown if user does not exist
+  // try get user from db, and an exception will be thrown if user does not exist
   private static boolean userExists() {
     try {
       DatabaseManager.getUser(testUserEmail, testPassword);
