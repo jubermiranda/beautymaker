@@ -276,7 +276,7 @@ classDiagram
     UIComponents --> SessionLayer : interage via eventos
     SessionLayer --> ServiceLayer : utiliza serviços
     ServiceLayer --> ModelLayer : manipula dados
-    ServiceLayer -.-> UIComponents : notifica via eventos
+    ServiceLayer ..> UIComponents : notifica via eventos
 ```
 
 ## Padrões de Design Implementados
