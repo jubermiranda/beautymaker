@@ -274,6 +274,7 @@ classDiagram
     }
     
     UIComponents --> SessionLayer : interage via eventos
+    UIComponents --> ServiceLayer : interage via eventos
     SessionLayer --> ServiceLayer : utiliza serviços
     ServiceLayer --> ModelLayer : manipula dados
     ServiceLayer ..> UIComponents : notifica via eventos
