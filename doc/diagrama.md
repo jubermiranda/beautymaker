@@ -273,8 +273,8 @@ classDiagram
         +StaffData, NotificationType
     }
     
-    UIComponents --> SessionLayer : interage via eventos
-    UIComponents --> ServiceLayer : interage via eventos
+    SessionLayer --> UIComponents : interage via eventos
+    ServiceLayer --> UIComponents : interage via eventos
     SessionLayer --> ServiceLayer : utiliza serviços
     ServiceLayer --> ModelLayer : manipula dados
     ServiceLayer ..> UIComponents : notifica via eventos
