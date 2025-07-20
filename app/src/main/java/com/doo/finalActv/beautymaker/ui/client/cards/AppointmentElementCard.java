@@ -1,11 +1,13 @@
 package com.doo.finalActv.beautymaker.ui.client.cards;
 
 import com.doo.finalActv.beautymaker.model.SelectableAppointmentElement;
+import com.doo.finalActv.beautymaker.serivce.appdata.ContentProvider;
+import com.doo.finalActv.beautymaker.serivce.appdata.DataChangeListener;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
 import com.doo.finalActv.beautymaker.serivce.event.model.AppointmentElementSelectedEvent;
 import java.awt.Color;
 
-public abstract class AppointmentElementCard<T extends SelectableAppointmentElement> extends javax.swing.JPanel {
+public abstract class AppointmentElementCard<T extends SelectableAppointmentElement> extends javax.swing.JPanel implements DataChangeListener {
 
   private Color selectedColor;
   private Color unselectedColor;
@@ -61,16 +63,23 @@ public abstract class AppointmentElementCard<T extends SelectableAppointmentElem
       }
     });
 
-    EventManager.getInstance().subscribe(
-        AppointmentElementSelectedEvent.class,
-        (event) -> {
-          if (event.selectedElement.equals(this.element)) {
-            this.setSelected(true);
-          } else {
-            this.setSelected(false);
-          }
-        }
-    );
+    ContentProvider.getInstance().addListener(this, "appointment");
+  }
+
+  @Override
+  public void onDataChanged() {
+    if(this.element == null) {
+      return;
+    }
+
+    if(
+        this.element.equals(ContentProvider.getInstance().getSelectedStaff()) ||
+        this.element.equals(ContentProvider.getInstance().getSelectedService())
+    ) {
+      this.setSelected(true);
+    } else {
+      this.setSelected(false);
+    }
   }
 
   private void updateAppearance() {

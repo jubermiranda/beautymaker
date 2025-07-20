@@ -5,7 +5,8 @@ import com.doo.finalActv.beautymaker.ui.client.AppointmentsView;
 import com.doo.finalActv.beautymaker.ui.client.ProfileView;
 import com.doo.finalActv.beautymaker.ui.client.ServicesView;
 import com.doo.finalActv.beautymaker.ui.client.StaffView;
-
+import com.doo.finalActv.beautymaker.ui.client.cards.AppointmentSelection;
+import javax.swing.JPanel;
 
 public class ClientHomeView extends BaseHomeView {
 

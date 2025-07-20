@@ -16,6 +16,13 @@ public class ServiceData  implements SelectableAppointmentElement {
       this.duration = duration;
   }
 
+  public ServiceData(ServiceData other) {
+      this.name = other.name;
+      this.description = other.description;
+      this.price = other.price;
+      this.duration = other.duration;
+  }
+
   public ServiceData() {
       this.name = "";
       this.description = "";

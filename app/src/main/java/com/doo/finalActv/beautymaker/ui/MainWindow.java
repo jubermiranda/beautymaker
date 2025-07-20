@@ -41,7 +41,7 @@ public class MainWindow extends javax.swing.JFrame {
     this.showLoginView();
 
     // test porpose: mock login
-    //this.mockLogin();
+    this.mockLogin();
   }
 
   /**

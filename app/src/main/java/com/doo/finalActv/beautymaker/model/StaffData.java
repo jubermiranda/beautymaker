@@ -16,6 +16,13 @@ public class StaffData implements SelectableAppointmentElement {
     this.experience = experience;
   }
 
+  public StaffData(StaffData other) {
+    this.name = other.name;
+    this.rating = other.rating;
+    this.ratingCount = other.ratingCount;
+    this.experience = other.experience;
+  }
+
   public StaffData() {
     this.name = "";
     this.rating = 0.0f;

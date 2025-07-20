@@ -1,6 +1,11 @@
 package com.doo.finalActv.beautymaker.ui.client;
 
+import com.doo.finalActv.beautymaker.model.StaffData;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.AppointmentElementSelectedEvent;
 import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JPanel;
 
@@ -27,42 +32,46 @@ public class CardListView<T extends JPanel> extends javax.swing.JPanel {
   private void initComponents() {
 
     titleLabel = new javax.swing.JLabel();
+    filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 20));
+    crrSelectionPanell = new javax.swing.JPanel();
+    filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 20));
     jScrollPane1 = new javax.swing.JScrollPane();
     cardContainer = new javax.swing.JPanel();
 
-    setPreferredSize(new java.awt.Dimension(1000, 1000));
+    setMaximumSize(new java.awt.Dimension(49150, 1000));
+    setPreferredSize(new java.awt.Dimension(1000, 900));
+    setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
     titleLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
     titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    titleLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+    titleLabel.setMaximumSize(new java.awt.Dimension(32767, 32767));
+    titleLabel.setPreferredSize(new java.awt.Dimension(988, 100));
+    add(titleLabel);
+    add(filler1);
+
+    crrSelectionPanell.setMaximumSize(new java.awt.Dimension(1200, 250));
+    crrSelectionPanell.setPreferredSize(new java.awt.Dimension(1200, 40));
+    crrSelectionPanell.setLayout(new java.awt.BorderLayout());
+    add(crrSelectionPanell);
+    add(filler2);
+
+    jScrollPane1.setMaximumSize(new java.awt.Dimension(1200, 820));
+    jScrollPane1.setPreferredSize(new java.awt.Dimension(1200, 820));
 
     cardContainer.setLayout(new javax.swing.BoxLayout(cardContainer, javax.swing.BoxLayout.Y_AXIS));
     jScrollPane1.setViewportView(cardContainer);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-    this.setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
-          .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE))
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 882, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+    add(jScrollPane1);
   }// </editor-fold>//GEN-END:initComponents
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JPanel cardContainer;
+  private javax.swing.JPanel crrSelectionPanell;
+  private javax.swing.Box.Filler filler1;
+  private javax.swing.Box.Filler filler2;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JLabel titleLabel;
   // End of variables declaration//GEN-END:variables
@@ -72,7 +81,7 @@ public class CardListView<T extends JPanel> extends javax.swing.JPanel {
       this.titleLabel.setText(this.title);
     } else {
       this.titleLabel.setText("Card List");
-    }
+    } 
   }
 
   public void updateCardList(ArrayList<T> cardList) {
@@ -87,5 +96,16 @@ public class CardListView<T extends JPanel> extends javax.swing.JPanel {
 
     this.cardContainer.revalidate();
     this.cardContainer.repaint();
+  }
+
+  public void updateSelectionPanel(JPanel selectionPanel) {
+    this.crrSelectionPanell.removeAll();
+    this.crrSelectionPanell.setPreferredSize(null);
+    this.crrSelectionPanell.add(selectionPanel, BorderLayout.CENTER);
+    this.crrSelectionPanell.revalidate();
+    this.crrSelectionPanell.repaint();
+    
+    this.revalidate();
+    this.repaint();
   }
 }

@@ -44,6 +44,7 @@ public class MenuEntry {
   private void updateSelection() {
     if (this.menuPanel instanceof MenuCardPanel menuCardPanel) {
       menuCardPanel.setSelected(this.isSelected);
+      this.viewPanel.setVisible(this.isSelected);
     }
   }
 
