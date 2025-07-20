@@ -1,5 +1,6 @@
 package com.doo.finalActv.beautymaker.serivce.appdata;
 
+import com.doo.finalActv.beautymaker.model.ServiceData;
 import com.doo.finalActv.beautymaker.model.StaffData;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.db.DatabaseManager;
@@ -37,6 +38,10 @@ public class ContentProvider {
 
   public ArrayList<StaffData> getStaffs() {
     return this.appData.staffs;
+  }
+
+  public ArrayList<ServiceData> getServices() {
+    return this.appData.services;
   }
 
   public void addListener(DataChangeListener listener, String key) {
@@ -85,8 +90,12 @@ public class ContentProvider {
     // async load some data
     CompletableFuture.runAsync(() -> {
       ArrayList<StaffData> staffs = DatabaseManager.getInstance().getStaffs();
+      ArrayList<ServiceData> services = DatabaseManager.getInstance().getServices();
+
       this.appData.staffs = staffs;
+      this.appData.services = services; 
       this.notifyListenersOf("staffs");
+      this.notifyListenersOf("services");
     });
   }
 }
