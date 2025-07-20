@@ -67,7 +67,7 @@ public class SessionManager {
     }
 
     try {
-      this.user = DatabaseManager.getUser(event.username, event.password);
+      user = DatabaseManager.getUser(event.username, event.password);
       eventManager.publish(new SuccessfulLoginEvent());
 
     } catch (Exception e) {
