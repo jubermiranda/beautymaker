@@ -3,7 +3,7 @@ package com.doo.finalActv.beautymaker.model;
 import java.time.LocalDate;
 
 
-public class ServiceData {
+public class ServiceData  implements SelectableAppointmentElement {
     public String name;
     public String description;
     public int price; // in cents

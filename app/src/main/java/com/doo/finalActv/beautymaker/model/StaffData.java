@@ -3,7 +3,7 @@ package com.doo.finalActv.beautymaker.model;
 import java.time.LocalDate;
 
 
-public class StaffData {
+public class StaffData implements SelectableAppointmentElement {
   public String name;
   public float rating;
   public int ratingCount;
