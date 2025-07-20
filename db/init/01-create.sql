@@ -80,3 +80,38 @@ FROM
 JOIN
     beautymaker.employees e ON u.id = e.user_id;
 
+
+
+-- services tabel
+CREATE TABLE IF NOT EXISTS beautymaker.services (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(200) NOT NULL UNIQUE,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
+  duration INTERVAL NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- appointments table
+CREATE TABLE IF NOT EXISTS beautymaker.appointments (
+  id SERIAL PRIMARY KEY,
+  client_id INTEGER NOT NULL REFERENCES beautymaker.clients(user_id) ON DELETE CASCADE,
+  employee_id INTEGER NOT NULL REFERENCES beautymaker.employees(user_id) ON DELETE CASCADE,
+  service_id INTEGER NOT NULL REFERENCES beautymaker.services(id) ON DELETE CASCADE,
+  appointment_time TIMESTAMP WITH TIME ZONE NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'scheduled',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- employee schedule table
+CREATE TABLE IF NOT EXISTS beautymaker.employee_schedule (
+  id SERIAL PRIMARY KEY,
+  employee_id INTEGER NOT NULL REFERENCES beautymaker.employees(user_id) ON DELETE CASCADE,
+  day_of_week INTEGER NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6), -- 0 = Sunday, 6 = Saturday
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
