@@ -10,6 +10,7 @@ import com.doo.finalActv.beautymaker.serivce.event.EventManager;
 import com.doo.finalActv.beautymaker.serivce.event.model.NotificationEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.ShowLoginViewEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.ShowSignupViewEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.SuccessfulLoginEvent;
 import com.doo.finalActv.beautymaker.serivce.event.model.UserLoggedOutEvent;
@@ -40,7 +41,7 @@ public class MainWindow extends javax.swing.JFrame {
     this.showLoginView();
 
     // test porpose: mock login
-    this.mockLogin();
+    //this.mockLogin();
   }
 
   /**
@@ -179,7 +180,7 @@ public class MainWindow extends javax.swing.JFrame {
         break;
       case SIGNUP:
         //TODO
-        result = null;
+        result = new SignupView();
         break;
       case HOME:
         result = this.createApropriateHomeView();
@@ -253,6 +254,10 @@ public class MainWindow extends javax.swing.JFrame {
 
     EventManager.getInstance().subscribe(ShowSignupViewEvent.class, event -> {
       this.showSignupView();
+    });
+    
+    EventManager.getInstance().subscribe(ShowLoginViewEvent.class, event -> {
+      this.showLoginView();
     });
   }
 

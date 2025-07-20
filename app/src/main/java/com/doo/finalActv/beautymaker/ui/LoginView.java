@@ -14,6 +14,8 @@ import com.doo.finalActv.beautymaker.model.Employee;
 import com.doo.finalActv.beautymaker.serivce.db.AuthService;
 import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
 import com.doo.finalActv.beautymaker.exception.InvalidPasswordException;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLoginEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.ShowSignupViewEvent;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.sql.SQLException;
@@ -155,30 +157,17 @@ public class LoginView extends InternalView {
         String email= jTextField1.getText();
         char[] password = jPasswordField1.getPassword();
         
-        try{
-            User user= AuthService.login(email, password);
-            
-            if(user instanceof Employee){
-                new EmployeeHomeView().setVisible(true);
-            }else{
-                new ClientHomeView().setVisible(true);
-            }
-            
-            SwingUtilities.getWindowAncestor(jButton1).dispose();
-            
-        }catch (UserNotFoundException ex){
-            JOptionPane.showMessageDialog(null, "Usuário não encontrado.");
-        }catch(InvalidPasswordException ex){
-            JOptionPane.showMessageDialog(null, "Senha incorreta.");
-        }catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Erro ao acessar o banco de dados.");
-            ex.printStackTrace();
-        }
+        EventManager.getInstance().publish(new RequestLoginEvent(
+                email,
+                password
+        ));
+        this.jPasswordField1.setText("");
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new SignupView().setVisible(true);
-        dispose();
+        EventManager.getInstance().publish(new ShowSignupViewEvent());
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

@@ -3,7 +3,11 @@ package com.doo.finalActv.beautymaker.ui;
 import javax.swing.JOptionPane;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.db.AuthService;
+import com.doo.finalActv.beautymaker.serivce.event.EventManager;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestSignupEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.ShowLoginViewEvent;
 import com.doo.finalActv.beautymaker.ui.LoginView;
+import com.doo.finalActv.beautymaker.ui.customComponents.InternalView;
 import java.time.LocalDate;
 import javax.swing.JOptionPane;
 
@@ -11,7 +15,7 @@ import javax.swing.JOptionPane;
  *
  * @author user
  */
-public class SignupView extends javax.swing.JInternalFrame {
+public class SignupView extends InternalView {
 
   /**
    * Creates new form SignupView
@@ -158,25 +162,26 @@ public class SignupView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try{
-            String username= jTextField1.getSelectedText();
-            String email= jTextField3.getText();
-            char[] password= jPasswordField1.getPassword();
-            LocalDate birthDate= LocalDate.parse(jTextField4.getText());
-            
-            User user=AuthService.signup(username, email, password, birthDate);
-            JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!");
-            
-            this.dispose();
-            new LoginView().setVisible(true);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar: "+ e.getMessage());
-        }
+      String username = jTextField2.getText();
+      String email = jTextField3.getText();
+      String confirmEmail = jTextField1.getText();
+      char[] password = jPasswordField1.getPassword();
+      char[] confirmPassword = jPasswordField2.getPassword();
+      LocalDate birthDate = LocalDate.parse(jTextField4.getText());
+
+      EventManager.getInstance().publish(new RequestSignupEvent(
+            username,
+            email,
+            confirmEmail,
+            password,
+            confirmPassword,
+            birthDate
+
+      ));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.dispose();
-        new LoginView().setVisible(true);
+      EventManager.getInstance().publish(new ShowLoginViewEvent());
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
