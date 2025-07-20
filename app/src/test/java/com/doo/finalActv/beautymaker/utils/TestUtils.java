@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class TestUtils {
 
   private static final String testUserName = "testUser";
-  private static final String testUserEmail = "user_test@email.com";
+    private static final String testUserEmail = "user_test@email.com";
   private static final char[] testPassword = "testPassword123".toCharArray();
   private static final LocalDate testBirthDate = LocalDate.of(1990, 1, 1);
 
