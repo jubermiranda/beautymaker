@@ -8,12 +8,13 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import javax.swing.JLabel;
 
-public class ServiceCard extends javax.swing.JPanel {
-  private ServiceData serviceData;
+// TODO: use AppointmentElementCard as a base class
 
+public class ServiceCard extends AppointmentElementCard<ServiceData> {
   public ServiceCard(ServiceData serviceData) {
+    super(serviceData);
     initComponents();
-    this.serviceData = serviceData;
+
     this.initialize();
   }
 
@@ -31,7 +32,7 @@ public class ServiceCard extends javax.swing.JPanel {
     durationField = new javax.swing.JLabel();
     priceField = new javax.swing.JLabel();
 
-    setBackground(new java.awt.Color(255, 255, 255));
+    setBackground(new java.awt.Color(204, 204, 204));
     setMaximumSize(new java.awt.Dimension(580, 200));
     setMinimumSize(new java.awt.Dimension(580, 200));
 
@@ -82,9 +83,11 @@ public class ServiceCard extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
   private void initialize() {
-    nameField.setText(this.serviceData.name);
+    ServiceData serviceData = (ServiceData) super.element;
+
+    nameField.setText(serviceData.name);
     descriptionField.setText(
-        this.formatDescription(this.serviceData.description)
+        this.formatDescription(serviceData.description)
     );
     durationField.setText(this.getFormattedDuration());
     priceField.setText(this.getFormattedPrice());
@@ -95,7 +98,7 @@ public class ServiceCard extends javax.swing.JPanel {
 
   private String getFormattedDuration() {
     String result = "Duration: ";
-    int seconds = this.serviceData.duration;
+    int seconds = ((ServiceData) super.element).duration;
     int hours = seconds / 3600;
     int minutes = (seconds % 3600) / 60;
     int remainingSeconds = seconds % 60;
@@ -114,11 +117,12 @@ public class ServiceCard extends javax.swing.JPanel {
   private String getFormattedPrice() {
     // only show price > 0 (price is displayed only if a employee is assigned)
     // if price is 0, means that the service is waiting for an employee to be assigned
-    if (this.serviceData.price <= 0) {
+    ServiceData serviceData = (ServiceData) super.element;
+    if (serviceData.price <= 0) {
       return "";
     }
 
-    return "Price: $" + String.format("%.2f", this.serviceData.price / 100.0);
+    return "Price: $" + String.format("%.2f", serviceData.price / 100.0);
   }
 
   private String formatDescription(String description) {
@@ -127,7 +131,7 @@ public class ServiceCard extends javax.swing.JPanel {
     }
 
     String result = "<html>";
-    result += this.serviceData.description.replace("\n", "<br>");
+    result += ((ServiceData) super.element).description.replace("\n", "<br>");
     result += "</html>";
     return result;
   }

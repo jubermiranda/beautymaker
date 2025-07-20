@@ -21,4 +21,18 @@ public class StaffData implements SelectableAppointmentElement {
     this.rating = 0.0f;
     this.experience = LocalDate.now();
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof StaffData)) return false;
+    StaffData that = (StaffData) o;
+
+    return (
+        Float.compare(that.rating, rating) == 0 &&
+        ratingCount == that.ratingCount &&
+        name.equals(that.name) &&
+        experience.equals(that.experience)
+    );
+  }
 }
