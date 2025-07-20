@@ -112,6 +112,12 @@ public class ServiceCard extends javax.swing.JPanel {
   }
 
   private String getFormattedPrice() {
+    // only show price > 0 (price is displayed only if a employee is assigned)
+    // if price is 0, means that the service is waiting for an employee to be assigned
+    if (this.serviceData.price <= 0) {
+      return "";
+    }
+
     return "Price: $" + String.format("%.2f", this.serviceData.price / 100.0);
   }
 
