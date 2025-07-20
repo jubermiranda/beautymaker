@@ -99,14 +99,14 @@ public class DatabaseManager {
     ArrayList<ServiceData> services = new ArrayList<>();
     try (Connection conn = ConnectionService.getConnection()) {
 
-      String sql = "SELECT name, description, duration_seconds FROM " + DB_SCHEMA + ".services";
+      String sql = "SELECT name, description, duration FROM " + DB_SCHEMA + ".services";
       try (PreparedStatement stmt = conn.prepareStatement(sql);
            ResultSet rs = stmt.executeQuery()) {
         while (rs.next()) {
           ServiceData service = new ServiceData();
           service.name = rs.getString("name");
           service.description = rs.getString("description");
-          service.duration = rs.getInt("duration_seconds");
+          service.duration = rs.getInt("duration");
           services.add(service);
         }
       }
