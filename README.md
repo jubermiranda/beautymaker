@@ -1,6 +1,9 @@
 # Beauty Maker
 # Manual do Usuário:
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04a2b84 (Update README.md)
 Sistema para Gestão de Salão de Beleza.
 
 # Acesso ao Sistema:
@@ -68,3 +71,7 @@ Caso o sistema identifique, no momento do login, que o usuário é um cliente, e
   .Visualizar a lista completa de serviços cadastrados pelos profissionais no sistema.
 
   .Acessar a relação de profissionais disponíveis, com nome e função, facilitando a escolha no momento do agendamento.
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 04a2b84 (Update README.md)
