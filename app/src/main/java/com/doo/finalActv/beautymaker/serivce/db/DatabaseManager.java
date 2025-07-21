@@ -4,6 +4,7 @@ import com.doo.finalActv.beautymaker.exception.IllegalSignupException;
 import com.doo.finalActv.beautymaker.exception.InvalidPasswordException;
 import com.doo.finalActv.beautymaker.exception.UserNotFoundException;
 import com.doo.finalActv.beautymaker.model.NotificationType;
+import com.doo.finalActv.beautymaker.model.ServiceData;
 import com.doo.finalActv.beautymaker.model.StaffData;
 import com.doo.finalActv.beautymaker.model.User;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
@@ -92,6 +93,32 @@ public class DatabaseManager {
       ));
     }
     return staffs;
+  }
+
+  public ArrayList<ServiceData> getServices() {
+    ArrayList<ServiceData> services = new ArrayList<>();
+    try (Connection conn = ConnectionService.getConnection()) {
+
+      String sql = "SELECT name, description, duration FROM " + DB_SCHEMA + ".services";
+      try (PreparedStatement stmt = conn.prepareStatement(sql);
+           ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          ServiceData service = new ServiceData();
+          service.name = rs.getString("name");
+          service.description = rs.getString("description");
+          service.duration = rs.getInt("duration");
+          services.add(service);
+        }
+      }
+
+    } catch (SQLException e) {
+      EventManager.getInstance().publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Database Error",
+          "Failed to retrieve services data: " + e.getMessage()
+      ));
+    }
+    return services;
   }
 
 }

@@ -69,6 +69,36 @@ public class EmployeeHomeViewTest {
         LocalDate.of(2000, 9, 27),
         LocalDate.of(2020, 3, 15)
     );
+    TestUtils.createTestEmployee(
+        "John Doe",
+        "john_doe@gmail.com",
+        "john1234".toCharArray(),
+        LocalDate.of(1995, 11, 5),
+        LocalDate.of(2021, 2, 20)
+    );
+    TestUtils.createTestEmployee(
+        "Jane Smith",
+        "smith.jane@gmail.com",
+        "janesmith1234".toCharArray(),
+        LocalDate.of(1992, 7, 30),
+        LocalDate.of(2019, 8, 25)
+    );
+    TestUtils.createTestEmployee(
+        "Sarah Johnson",
+        "sarah_jh@mail.com",
+        "sarahjohnson1234".toCharArray(),
+        LocalDate.of(1988, 4, 10),
+        LocalDate.of(2018, 5, 5)
+    );
+    TestUtils.createTestEmployee(
+        "Michael Brown",
+        "mich_brown@outlook.com",
+        "michaelbrown1234".toCharArray(),
+        LocalDate.of(1993, 12, 15),
+        LocalDate.of(2022, 3, 1)
+    );
+
+
 
     // wait for the event to be processed
     try {

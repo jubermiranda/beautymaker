@@ -1,8 +1,11 @@
 package com.doo.finalActv.beautymaker.ui;
 
 import com.doo.finalActv.beautymaker.model.MenuEntry;
+import com.doo.finalActv.beautymaker.model.User;
+import com.doo.finalActv.beautymaker.serivce.appdata.ContentProvider;
 import com.doo.finalActv.beautymaker.serivce.event.EventManager;
 import com.doo.finalActv.beautymaker.serivce.event.model.MenuItemSelectedEvent;
+import com.doo.finalActv.beautymaker.serivce.event.model.RequestLogoutEvent;
 import com.doo.finalActv.beautymaker.ui.client.AppointmentsView;
 import com.doo.finalActv.beautymaker.ui.client.ProfileView;
 import com.doo.finalActv.beautymaker.ui.client.ServicesView;
@@ -12,6 +15,9 @@ import javax.swing.JComponent;
 
 import com.doo.finalActv.beautymaker.ui.customComponents.LogoHome;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 abstract class BaseHomeView extends javax.swing.JInternalFrame {
@@ -81,12 +87,29 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
     this.addLogo();
     this.setupMenuListener();
     this.addMenuItems();
+    this.addLogoutBtn();
 
     this.selectInitialMenuEntry();
   }
 
   private void addLogo() {
     this.panelMenu.add(new LogoHome());
+    this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
+    String wellcomeText = "Welcome";
+    User user = ContentProvider.getInstance().getUser();
+    if(user != null) {
+      wellcomeText += ", " + user.getName();
+    }
+    JLabel welcomeLabel = new JLabel(wellcomeText);
+    welcomeLabel.setFont(new java.awt.Font("Arial", 1, 18));
+    welcomeLabel.setForeground(new java.awt.Color(255, 255, 255));
+    welcomeLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+    welcomeLabel.setAlignmentY(JLabel.CENTER_ALIGNMENT);
+    welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+
+
+    this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
+    this.panelMenu.add(welcomeLabel);
     this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
   }
 
@@ -138,5 +161,20 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
 
     this.revalidate();
     this.repaint();
+  }
+
+  private void addLogoutBtn() {
+    
+    JButton logoutButton = new JButton("Logout");
+    logoutButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
+    logoutButton.addActionListener(e -> {
+      EventManager.getInstance().publish(new RequestLogoutEvent());
+    });
+    logoutButton.setVisible(true);
+
+    this.panelMenu.add(javax.swing.Box.createVerticalStrut(50));
+    this.panelMenu.add(logoutButton);
+    this.panelMenu.revalidate();
+    this.panelMenu.repaint();
   }
 }

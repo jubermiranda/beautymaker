@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class TestUtils {
 
   private static final String testUserName = "testUser";
-  private static final String testUserEmail = "user_test@email.com";
+    private static final String testUserEmail = "user_test@email.com";
   private static final char[] testPassword = "testPassword123".toCharArray();
   private static final LocalDate testBirthDate = LocalDate.of(1990, 1, 1);
 
@@ -347,6 +347,48 @@ public class TestUtils {
     }
 
     return employeeId;
+  }
+
+  public static void addTestService(
+      String name,
+      String description,
+      int duration
+  ) {
+    Connection conn;
+    try {
+      conn = ConnectionService.getConnection();
+    } catch (SQLException ex) {
+      EventManager.getInstance().publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Connection error",
+          "Failed to get database connection"
+      ));
+      return;
+    }
+
+    String sql = "INSERT INTO " + DatabaseManager.DB_SCHEMA + ".services (name, description, duration) "
+        + "VALUES (?, ?, ?)";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, name);
+      stmt.setString(2, description);
+      stmt.setInt(3, duration);
+      stmt.executeUpdate();
+    } catch (SQLException e) {
+      EventManager.getInstance().publish(new NotificationEvent(
+          NotificationType.ERROR,
+          "Failed to add service",
+          e.getMessage()
+      ));
+      e.printStackTrace();
+    } finally {
+      ConnectionService.closeConnection();
+    }
+
+    EventManager.getInstance().publish(new NotificationEvent(
+        NotificationType.WARNING,
+        "Service added",
+        "Service " + name + " added successfully."
+    ));
   }
 
 }
