@@ -1,9 +1,5 @@
 # Beauty Maker
 # Manual do Usuário:
-<<<<<<< HEAD
-
-=======
->>>>>>> 04a2b84 (Update README.md)
 Sistema para Gestão de Salão de Beleza.
 
 # Acesso ao Sistema:
