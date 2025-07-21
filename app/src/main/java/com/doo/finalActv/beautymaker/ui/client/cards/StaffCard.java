@@ -85,7 +85,8 @@ public class StaffCard extends AppointmentElementCard<StaffData> {
   // End of variables declaration//GEN-END:variables
 
   private void initialize() {
-    nameField.setText(((StaffData) super.element).name); 
+    StaffData staffData = (StaffData) super.element;
+    nameField.setText(staffData.name); 
     experienceField.setText("Experience: " + this.getFormattedExperience());
     this.configureRatingPanel();
 
