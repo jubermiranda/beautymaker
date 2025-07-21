@@ -16,8 +16,6 @@ import java.sql.*;
 import java.sql.SQLException;
 
 import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TestUtils {
 

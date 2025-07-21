@@ -92,6 +92,10 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
     this.selectInitialMenuEntry();
   }
 
+  protected void selectMenuEntry(String key) {
+    EventManager.getInstance().publish(new MenuItemSelectedEvent(key));
+  }
+
   private void addLogo() {
     this.panelMenu.add(new LogoHome());
     this.panelMenu.add(javax.swing.Box.createVerticalStrut(20));
@@ -128,6 +132,7 @@ abstract class BaseHomeView extends javax.swing.JInternalFrame {
         }
       }
     });
+
   }
 
   private void addMenuItems() {

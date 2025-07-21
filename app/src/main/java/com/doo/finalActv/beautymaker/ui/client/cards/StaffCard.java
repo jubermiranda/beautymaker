@@ -3,16 +3,17 @@ package com.doo.finalActv.beautymaker.ui.client.cards;
 import com.doo.finalActv.beautymaker.model.StaffData;
 import java.awt.Color;
 import java.awt.Component;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import javax.swing.JLabel;
 
-public class StaffCard extends javax.swing.JPanel {
-  private StaffData staffData;
+// TODO: use AppointmentElementCard as a base class
+
+public class StaffCard extends AppointmentElementCard<StaffData> {
 
   public StaffCard(StaffData staffData) {
+    super(staffData);
     initComponents();
-    this.staffData = staffData;
+
     this.initialize();
   }
 
@@ -30,7 +31,7 @@ public class StaffCard extends javax.swing.JPanel {
     ratingPanel = new javax.swing.JPanel();
     jLabel1 = new javax.swing.JLabel();
 
-    setBackground(new java.awt.Color(255, 255, 255));
+    setBackground(new java.awt.Color(204, 204, 204));
     setMaximumSize(new java.awt.Dimension(580, 200));
     setMinimumSize(new java.awt.Dimension(580, 200));
 
@@ -84,7 +85,8 @@ public class StaffCard extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
   private void initialize() {
-    nameField.setText(this.staffData.name);
+    StaffData staffData = (StaffData) super.element;
+    nameField.setText(staffData.name); 
     experienceField.setText("Experience: " + this.getFormattedExperience());
     this.configureRatingPanel();
 
@@ -93,9 +95,12 @@ public class StaffCard extends javax.swing.JPanel {
   }
 
   private String getFormattedExperience() {
-    int years = (int) java.time.temporal.ChronoUnit.YEARS.between(this.staffData.experience, java.time.LocalDate.now());
+    int years = (int) java.time.temporal.ChronoUnit.YEARS.between(
+        ((StaffData) super.element).experience,
+        java.time.LocalDate.now()
+    );
     int remaningMonths = (int) ChronoUnit.MONTHS.between(
-        this.staffData.experience.plusYears(years), java.time.LocalDate.now()
+        ((StaffData) super.element).experience.plusYears(years), java.time.LocalDate.now()
     );
 
     String result = years + " year(s)";
@@ -107,17 +112,19 @@ public class StaffCard extends javax.swing.JPanel {
 
   private void configureRatingPanel() {
     ratingPanel.removeAll();
-    if (this.staffData.ratingCount == 0) {
+    StaffData staffData = (StaffData) super.element;
+
+    if (staffData.ratingCount == 0) {
       JLabel message = new JLabel("Not rated yet");
       ratingPanel.add(message);
     } else {
       // TODO : Implement a visual representation of the rating
       String ratingMessage = (
-          "★".repeat((int) this.staffData.rating) +
-          "☆".repeat(5 - (int) this.staffData.rating) +
-          " (" + String.format("%.1f", this.staffData.rating) + 
+          "★".repeat((int) staffData.rating) +
+          "☆".repeat(5 - (int) staffData.rating) +
+          " (" + String.format("%.1f", staffData.rating) + 
           " - " +
-          this.staffData.ratingCount + " ratings)"
+          staffData.ratingCount + " ratings)"
       );
 
       JLabel ratingLabel = new JLabel(ratingMessage);
